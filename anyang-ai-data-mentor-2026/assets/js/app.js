@@ -55,7 +55,8 @@
     levels: '<path d="M4 20h4v-6H4zM10 20h4V9h-4zM16 20h4V4h-4z"/>',
     faq: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',
     book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
-    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"/>'
   };
   function icon(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[n] || "") + "</svg>"; }
   function jobIcon(j) { return '<span class="job-icon">' + icon(j.id) + "</span>"; }
@@ -64,7 +65,8 @@
   var NAV = [
     { label: "상담", items: [
       { r: "home", t: "홈 / 상담 시작", i: "home" },
-      { r: "explore", t: "진로를 모르겠어요", i: "compass", cta: true }
+      { r: "explore", t: "진로를 모르겠어요", i: "compass", cta: true },
+      { r: "survey", t: "대기자 QR 설문", i: "qr" }
     ]},
     { label: "직무별 상담 가이드", items: JOBS.map(function (j) { return { r: "job/" + j.id, t: j.name, dot: j.color }; }) },
     { label: "자료", items: [
@@ -195,6 +197,7 @@
       g.items.forEach(function (r) { idx.push({ type: "학습 자료 · " + g.group, title: r.name, snip: r.desc, route: "#/resources", hay: r.name, body: r.desc }); });
     });
     idx.push({ type: "홈", title: "멘토 자기소개 30초 / 1분", snip: D.mentor.intro30, route: "#/home/intro", hay: "자기소개 소개 멘토 인사", body: "" });
+    idx.push({ type: "대기자 설문", title: "대기자 QR 설문 · 학생 결과 대응", snip: D.survey.handoutShort, route: "#/survey", hay: "qr 설문 대기 학생 결과지 공유 공개 큐알", body: D.survey.handout });
     idx.push({ type: "홈", title: "마무리 멘트", snip: D.closings.short, route: "#/home/closing", hay: "마무리 끝 정리 멘트", body: "" });
     idx.push({ type: "홈", title: "상담 시작 질문", snip: D.openers[0].q, route: "#/home/openers", hay: "시작 질문 오프닝 첫 질문", body: "" });
     idx.forEach(function (e) { e.nT = norm(e.title); e.nH = norm(e.hay); e.nB = norm(e.body + " " + e.snip); });
@@ -280,6 +283,8 @@
 
       '<div class="cta-hero"><div><h2>아직 관심 분야가 없어요</h2><p>질문 5개, 2~3분이면 먼저 탐색할 분야와 이번 주 실천 과제가 나와요.</p></div>' +
       '<a class="btn" href="#/explore">진로 탐색 시작 →</a></div>' +
+      '<div class="card qr-strip"><div><b>기다리는 학생이 있나요?</b> <span class="small muted">' + esc(D.survey.handoutShort) + '</span></div>' +
+      '<div class="btn-row"><button class="btn primary sm" data-qr="1">QR 크게 보기</button><a class="btn sm" href="#/survey">설문 대응 가이드</a></div></div>' +
 
       '<div class="grid g2" style="margin-top:16px">' +
         '<section class="card" id="timerCard"></section>' +
@@ -667,6 +672,47 @@
         return '<a class="sp-item" style="display:block" href="' + e.route + '"><div class="sp-type">' + esc(e.type) + '</div><div class="sp-title">' + esc(e.title) + '</div><div class="sp-snip">' + esc(e.snip) + "</div></a>";
       }).join("") + "</div>" : '<div class="card"><p>결과가 없어요. 짧은 단어로 다시 검색해 보세요. (예: 자격증, 코딩, 포트폴리오)</p></div>');
   };
+  /* ───────── 대기자 설문 (멘토 전용) ───────── */
+  function openQR() {
+    var o = document.createElement("div"); o.className = "qr-overlay"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "설문 QR 코드");
+    o.innerHTML = '<div class="qr-box"><div class="qr-title">📱 기다리는 동안 2분 진로 설문</div><div class="qr-img">' + D.survey.qrSvg + '</div>' +
+      '<div class="qr-url">' + esc(D.survey.url.replace("https://", "")) + '</div><div class="qr-sub">이름·연락처는 받지 않아요 · 결과 맨 아래 카드를 멘토에게 보여 주세요</div>' +
+      '<button class="btn" data-close="1">닫기 (Esc)</button></div>';
+    function close() { o.remove(); document.removeEventListener("keydown", esck); }
+    function esck(e) { if (e.key === "Escape") close(); }
+    o.addEventListener("click", function (e) { if (e.target === o || e.target.closest("[data-close]")) close(); });
+    document.addEventListener("keydown", esck);
+    document.body.appendChild(o); o.querySelector("[data-close]").focus();
+  }
+  P.survey = function () {
+    var S = D.survey, cur = route.parts[0] || "planner";
+    var tname = function (id) { return id === "explore" ? "탐색 시작형 (모두 모르겠음)" : JOB[id].name; };
+    var t = S.types.filter(function (x) { return x.id === cur; })[0] || S.types[0];
+    var say = t.id === "explore" ? D.explore.mentorScript.allUnknown : D.explore.cards[t.id].say;
+    var faqById = {}; D.faq.forEach(function (f) { faqById[f.id] = f; });
+    return '<div class="page-head"><div class="eyebrow">멘토 전용 · 학생에게는 QR만 보여 주세요</div><h1>대기자 QR 설문</h1>' +
+      '<p>한 명과 상담하는 동안 나머지 학생은 휴대폰으로 2분 설문 → 결과지를 읽으며 기다립니다. 설문 기준은 \'진로 탐색\'과 같습니다.</p></div>' +
+      '<div class="grid g2">' +
+        '<section class="card"><div class="card-head"><h2>공유하기</h2><span class="tag tag-P">공개 페이지</span></div>' +
+          '<div class="qr-inline">' + S.qrSvg + '</div>' +
+          '<p class="small" style="margin-top:8px;word-break:break-all"><a href="' + esc(S.url) + '" target="_blank" rel="noopener">' + esc(S.url) + '</a></p>' +
+          '<div class="btn-row"><button class="btn primary" data-qr="1">QR 크게 보기</button><button class="btn" data-copy="' + esc(S.url) + '">링크 복사</button><a class="btn" href="' + esc(S.url) + '" target="_blank" rel="noopener">학생 화면 미리보기</a></div>' +
+          '<p class="small muted" style="margin-top:8px">공개 페이지에는 이 대시보드 링크가 없습니다. 다만 주소를 아는 누구나 두 페이지 모두 열 수 있습니다.</p></section>' +
+        '<section class="card"><h2>안내 멘트</h2>' + script("기다리는 학생에게", S.handout) + '<h3 style="margin-top:14px">운영 방법' + tag("M") + '</h3>' + ul(S.howTo, "small") + '</section>' +
+      '</div>' +
+      '<section class="card" style="margin-top:16px"><div class="card-head"><h2>학생 결과 유형별 대응</h2><span class="small muted">학생 카드의 \'먼저 알아볼 분야\'를 고르세요</span></div>' +
+        '<div class="level-tabs">' + S.types.map(function (x) { return '<a class="btn sm' + (x.id === t.id ? " on" : "") + '" href="#/survey/' + x.id + '">' + esc(tname(x.id)) + '</a>'; }).join("") + '</div>' +
+        '<div class="grid g2"><div>' + script("30초 이어가기 멘트", say) + '</div><div><h3>이어서 물어볼 질문</h3><ol>' + t.follow.map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + '</ol>' +
+        (t.id === "explore" ? '<a class="btn sm" href="#/explore/experiences">입문 체험 A·B·C 자세히 →</a>' : '<a class="btn sm" href="#/job/' + t.id + '">' + esc(JOB[t.id].name) + ' 가이드 →</a> <a class="btn sm" href="#/levels/vocational">특성화고 조언 →</a>') +
+        '</div></div></section>' +
+      '<section class="card" style="margin-top:16px"><h2>졸업 후 계획별 대응' + tag("G") + tag("M") + '</h2><div class="grid g2">' +
+        S.plans.map(function (p) { return '<div><h3>' + esc(p.label) + '</h3>' + script(p.label, p.say) + '<ul class="small" style="margin-top:6px">' + p.check.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + '</ul></div>'; }).join("") +
+      '</div></section>' +
+      '<section class="card" style="margin-top:16px"><h2>학생이 고른 \'궁금한 것\' → 바로 답하기</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>학생 카드 표시</th><th>FAQ</th></tr></thead><tbody>' +
+        S.topics.map(function (tp) { return "<tr><td><b>" + esc(tp.label) + "</b></td><td>" + tp.faq.map(function (id) { var f = faqById[id]; return f ? '<a href="#/faq/' + id + '">' + esc(f.q) + "</a>" : ""; }).join("<br>") + "</td></tr>"; }).join("") +
+      '</tbody></table></div></section>';
+  };
+
   function notFound() { return '<div class="card"><h1>페이지를 찾을 수 없어요</h1><p><a href="#/home">홈으로 이동</a></p></div>'; }
 
   /* ───────── router ───────── */
@@ -675,6 +721,7 @@
     return { page: parts[0] || "home", parts: parts.slice(1), path: parts.join("/") || "home" };
   }
   function commonClick(ev) {
+    var qb = ev.target.closest("[data-qr]"); if (qb) { openQR(); return; }
     var c = ev.target.closest("[data-copy]"); if (c) { copyText(c.getAttribute("data-copy")); return; }
     var t = ev.target.closest("[data-toggle]"); if (t) { var el = document.getElementById(t.getAttribute("data-toggle")); el.hidden = !el.hidden; t.classList.toggle("on", !el.hidden); return; }
     var d = ev.target.closest("[data-dur]"); if (d) { timerSetDur(+d.getAttribute("data-dur")); return; }
@@ -705,7 +752,7 @@
     void samePage;
   }
   function titleFor(r) {
-    return { home: "", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
+    return { home: "", survey: "대기자 QR 설문", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
       (r.page === "job" && JOB[r.parts[0]] ? JOB[r.parts[0]].name : "");
   }
 
