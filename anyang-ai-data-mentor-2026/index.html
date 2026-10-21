@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="안양시 청년 일자리박람회 AI·데이터 현직자 멘토링용 상담 대시보드 (멘토 개인 참고용)">
+  <title>AI·데이터 멘토링 대시보드</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f4fd8'/%3E%3Cpath d='M9 22l4-12h2l4 12M10.5 18h7M23 10v12' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    /* 테마·글자 크기는 화면 깜빡임 방지를 위해 먼저 적용 (브라우저 저장소 사용 불가 시 기본값) */
+    (function () {
+      try {
+        var t = localStorage.getItem("md-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+        var f = localStorage.getItem("md-fs"); if (f) document.documentElement.style.setProperty("--fs", f + "px");
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="주 메뉴">
+      <div class="brand">
+        <div class="brand-title">AI·데이터 멘토링</div>
+        <div class="brand-sub" id="brandSub">안양시 청년 일자리박람회</div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="sidebar-foot">
+        멘토 개인 참고용 도구 · 참가자 정보를 저장·전송하지 않습니다.<br>
+        <a href="#/sources">정보 출처와 구분 보기</a>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="메뉴 열기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="search-wrap" role="search">
+          <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <label for="q" class="sr-only">질문·직무·자격증 검색</label>
+          <input id="q" type="search" autocomplete="off" placeholder="질문 일부만 입력해도 검색 (예: 자격증, 비전공, 파이썬)">
+          <kbd>/</kbd>
+          <div class="search-pop" id="searchPop" role="listbox"></div>
+        </div>
+        <div class="top-tools">
+          <button class="mini-timer" id="miniTimer" title="상담 타이머 (홈으로 이동)">
+            <span class="mt-time" id="mtTime">15:00</span>
+            <span class="mt-stage" id="mtStage">대기</span>
+          </button>
+          <button class="icon-btn fs" id="fsBtn" title="글자 크기 변경" aria-label="글자 크기 변경">가<span style="font-size:.75em">가</span></button>
+          <button class="icon-btn" id="themeBtn" title="밝게/어둡게" aria-label="밝게/어둡게 전환">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          </button>
+        </div>
+      </header>
+      <main class="content" id="view" tabindex="-1"></main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><p style="padding:20px">이 대시보드는 JavaScript가 필요합니다.</p></noscript>
+
+  <!-- 콘텐츠 데이터 (행사 직전 수정은 data 폴더의 파일만 고치면 됩니다) -->
+  <script src="data/mentor.js"></script>
+  <script src="data/jobs.js"></script>
+  <script src="data/explore.js"></script>
+  <script src="data/levels.js"></script>
+  <script src="data/faq.js"></script>
+  <script src="data/resources.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

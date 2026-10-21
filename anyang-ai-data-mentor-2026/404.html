@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><title>이동 중…</title>
+<script>
+  /* GitHub Pages 하위 경로에서 잘못된 주소로 들어오면 대시보드 홈으로 이동 */
+  (function () {
+    var parts = location.pathname.split("/").filter(Boolean);
+    var base = location.hostname.endsWith("github.io") && parts.length ? "/" + parts[0] + "/" : "/";
+    location.replace(base + "#/home");
+  })();
+</script></head><body><p><a href="./">대시보드로 이동</a></p></body></html>
