@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>2분 AI·데이터 진로 탐색</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f4fd8'/%3E%3Cpath d='M16 7l2.6 6.4L25 16l-6.4 2.6L16 25l-2.6-6.4L7 16l6.4-2.6z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f4f6fb;--surface:#fff;--surface-2:#f7f9fc;--border:#e2e7ef;--text:#141c2b;--text-2:#465267;--text-3:#7a8699;
+  --accent:#1f4fd8;--accent-soft:#e8eefc;--on-accent:#fff;--ok:#0f7b4f;--ok-soft:#e3f5ec;--warn-soft:#fdf2df;
+  --violet:#6d3fd9;--violet-soft:#f1ebff;--amber:#b45f06;--amber-soft:#fff4e5;--teal:#0b7d74;--teal-soft:#e3f6f4;--blue:#1f5fd8;--blue-soft:#e7effd;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f141b;--surface:#171e28;--surface-2:#1c2431;--border:#2a3444;--text:#e8edf4;--text-2:#b6c1d1;--text-3:#8b98ab;
+  --accent:#7ea2ff;--accent-soft:#1d2a47;--on-accent:#0f141b;--ok:#6fdcab;--ok-soft:#133127;--warn-soft:#382a14;
+  --violet:#b79cff;--violet-soft:#2a2140;--amber:#f4b25c;--amber-soft:#352816;--teal:#5fd3c6;--teal-soft:#13302d;--blue:#86acff;--blue-soft:#18284a;
+  color-scheme:dark;}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;line-height:1.65;word-break:keep-all;overflow-wrap:anywhere;font-size:17px}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px calc(40px + env(safe-area-inset-bottom))}
+h1{font-size:1.55rem;line-height:1.35;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:1.2rem;line-height:1.4;margin:0 0 8px}
+h3{font-size:1.02rem;margin:14px 0 6px}
+p{margin:0 0 10px}
+ul{margin:0 0 6px;padding-left:1.2em}li{margin:4px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-top:14px}
+.eyebrow{font-size:.8rem;font-weight:800;color:var(--text-3);letter-spacing:.03em}
+.muted{color:var(--text-3)}.small{font-size:.88rem}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;margin-top:14px}.row .btn{flex:1}
+.hero{background:var(--accent);color:var(--on-accent);border:0}
+.hero h1{color:var(--on-accent)}
+.hero p{opacity:.92}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.badges span{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.18)}
+.bar{height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin:4px 0 14px}.bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.qn{font-size:.85rem;font-weight:800;color:var(--accent)}
+.qt{font-size:1.35rem;font-weight:800;line-height:1.4;margin:4px 0 4px}
+.opts{display:grid;gap:10px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;width:100%;min-height:58px;padding:12px 14px;border:2px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+.opt .em{font-size:1.35rem;flex:none;width:30px;text-align:center}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.unk{border-style:dashed;color:var(--text-2)}
+.result-top{border-top:6px solid var(--jc);padding-top:16px}
+.jt{color:var(--jc);display:flex;align-items:center;gap:10px}
+.jt .ic{width:42px;height:42px;border-radius:12px;background:var(--jcs);display:inline-flex;align-items:center;justify-content:center;font-size:1.4rem;flex:none}
+.c-violet{--jc:var(--violet);--jcs:var(--violet-soft)}.c-amber{--jc:var(--amber);--jcs:var(--amber-soft)}.c-teal{--jc:var(--teal);--jcs:var(--teal-soft)}.c-blue{--jc:var(--blue);--jcs:var(--blue-soft)}.c-gray{--jc:var(--accent);--jcs:var(--accent-soft)}
+.note{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.92rem}
+.note.warn{background:var(--warn-soft)}
+.mission{background:var(--ok-soft);border-radius:12px;padding:14px;font-weight:800}
+.day{list-style:none;padding:0;margin:0}
+.day li{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border)}
+.day li:last-child{border-bottom:0}
+.day b{color:var(--jc)}
+.chips span{display:inline-block;font-size:.85rem;padding:3px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);margin:3px 4px 3px 0}
+.show{border:2px solid var(--accent)}
+.show dl{display:grid;grid-template-columns:86px 1fr;gap:6px 10px;margin:8px 0 0}
+.show dt{color:var(--text-3);font-weight:800;font-size:.88rem}.show dd{margin:0;font-weight:700}
+.exp{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--surface-2)}
+.ox{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
+.ox .q{font-weight:700}
+.ox .b{display:flex;gap:8px;margin-top:8px}
+.ox .b button{flex:1;min-height:44px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font:inherit;font-weight:800;cursor:pointer}
+.ox .a{margin-top:8px;font-size:.92rem;display:none}
+.ox.done .a{display:block}
+.ox.right{border-color:var(--ok)}.ox.wrong{border-color:#d4453b}
+footer{margin-top:22px;font-size:.8rem;color:var(--text-3);text-align:center}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+(function(){
+"use strict";
+/* ───── 데이터 (멘토 대시보드의 진로 탐색과 같은 점수 기준) ───── */
+var Q = [
+  {id:"q1",t:"어떤 활동이 상대적으로 더 재미있을 것 같나요?",h:"'잘하는 것' 말고 '덜 지루한 것'을 골라도 돼요.",o:[
+    {id:"a",e:"🔍",l:"사람들이 불편해하는 걸 찾고 해결 방법 생각하기",p:{planner:2},r:"불편함을 찾고 해결책을 생각하는 걸 골랐어요"},
+    {id:"b",e:"📊",l:"자료나 숫자를 보고 규칙·패턴 찾기",p:{analyst:2},r:"자료에서 규칙을 찾는 걸 골랐어요"},
+    {id:"c",e:"🛠️",l:"컴퓨터로 무언가 직접 만들기",p:{llmdev:2},r:"직접 만드는 걸 골랐어요"},
+    {id:"d",e:"🤖",l:"AI 도구로 일을 더 편하게 만들기",p:{prompt:2},r:"AI 도구로 일을 편하게 만드는 걸 골랐어요"},
+    {id:"u",e:"🤔",l:"아직 잘 모르겠어요",p:{},u:1}]},
+  {id:"q2",t:"어떤 방식으로 일하는 게 더 끌리나요?",h:"직감으로 골라도 괜찮아요.",o:[
+    {id:"a",e:"📝",l:"아이디어를 정리하고 계획 세우기",p:{planner:2},r:"정리하고 계획 세우는 방식을 골랐어요"},
+    {id:"b",e:"⚖️",l:"자료를 비교하고 근거를 찾아 판단하기",p:{analyst:2},r:"근거를 찾아 판단하는 방식을 골랐어요"},
+    {id:"c",e:"🧩",l:"프로그램을 만들고 오류 고치기",p:{llmdev:2},r:"만들고 오류를 고치는 방식을 골랐어요"},
+    {id:"d",e:"🧪",l:"여러 AI 도구를 실험하고 더 좋게 바꾸기",p:{prompt:2},r:"AI를 실험하고 개선하는 방식을 골랐어요"},
+    {id:"u",e:"🤔",l:"아직 잘 모르겠어요",p:{},u:1}]},
+  {id:"q3",t:"지금까지 해 본 것에 가장 가까운 건?",h:"수업 시간에 잠깐 해 본 것도 경험이에요.",o:[
+    {id:"none",e:"🌱",l:"관련 경험이 거의 없어요",p:{},lv:"none"},
+    {id:"ai",e:"💬",l:"ChatGPT 같은 AI 도구를 써 봤어요",p:{prompt:1},r:"AI 도구를 써 본 경험이 있어요",lv:"ai"},
+    {id:"excel",e:"📗",l:"엑셀·컴활 등 데이터 정리를 해 봤어요",p:{analyst:1},r:"엑셀·데이터 정리 경험이 있어요",lv:"excel"},
+    {id:"code",e:"⌨️",l:"수업에서 코딩(파이썬·자바 등)을 배워 봤어요",p:{llmdev:1},r:"코딩을 배워 본 경험이 있어요",lv:"code"},
+    {id:"project",e:"🏆",l:"프로젝트·대회·현장실습 경험이 있어요",p:{},lv:"project"},
+    {id:"u",e:"🤔",l:"잘 모르겠어요",p:{},u:1,lv:"none"}]},
+  {id:"q4",t:"졸업 후 계획은 어느 쪽에 가까워요?",h:"정해지지 않았어도 괜찮아요.",o:[
+    {id:"job",e:"💼",l:"바로 취업하고 싶어요"},
+    {id:"college",e:"🎓",l:"대학(전문대 포함)에 진학하고 싶어요"},
+    {id:"both",e:"🔁",l:"먼저 취업하고, 일하면서 공부도 이어가고 싶어요"},
+    {id:"u",e:"🤔",l:"아직 모르겠어요",u:1}]},
+  {id:"q5",t:"일주일에 진로 공부에 쓸 수 있는 시간은?",h:"적어도 괜찮아요. 미션 크기만 바뀌어요.",o:[
+    {id:"t1",e:"⏱️",l:"1~2시간",s:"light"},
+    {id:"t2",e:"⏰",l:"3~5시간",s:"standard"},
+    {id:"t3",e:"🔥",l:"6시간 이상",s:"heavy"},
+    {id:"u",e:"🤔",l:"아직 모르겠어요",s:"light",u:1}]},
+  {id:"q6",multi:3,t:"멘토에게 꼭 물어보고 싶은 걸 골라 주세요",h:"최대 3개까지 고를 수 있어요. 없으면 그냥 '결과 보기'를 눌러요.",o:[
+    {id:"day",e:"🗓️",l:"개발자·AI 일을 하는 사람의 하루"},
+    {id:"hsjob",e:"🏫",l:"고등학교 졸업하고 바로 취업할 수 있는지"},
+    {id:"cert",e:"📜",l:"어떤 자격증이 도움이 되는지"},
+    {id:"pf",e:"🗂️",l:"포트폴리오는 어떻게 만드는지"},
+    {id:"nocode",e:"🙋",l:"코딩을 잘 못해도 할 수 있는지"},
+    {id:"math",e:"➗",l:"수학을 못해도 괜찮은지"},
+    {id:"ai",e:"🦾",l:"AI가 사람 일자리를 대신하는지"},
+    {id:"college",e:"🎓",l:"대학을 꼭 가야 하는지"}]}
+];
+var TIE=["planner","analyst","prompt","llmdev"];
+var NEIGHBOR={planner:"prompt",prompt:"planner",analyst:"planner",llmdev:"prompt"};
+var J={
+ planner:{name:"AI 서비스 기획자",c:"violet",ic:"🔍",one:"사람들이 뭐가 불편한지 찾아서, AI로 어떻게 해결할지 ‘설계도’를 그리는 사람",
+  what:["사용자 이야기·앱 리뷰를 보고 진짜 문제가 뭔지 정리해요","기능과 화면을 설계해요 (AI가 틀린 답을 낼 때 어떻게 보여줄지까지)","개발자·디자이너와 함께 ‘무엇을 먼저 만들지’ 정해요"],
+  day:[["오전","팀 회의에서 사용자 불만 사항 확인"],["점심 후","화면 설계 수정 (Figma 같은 도구)"],["오후","개발자와 일정·기능 범위 논의"],["퇴근 전","AI 답변 테스트 결과 보고 개선점 정리"]],
+  now:["자주 쓰는 앱의 불편한 점 3개를 적어 보기","학교생활 문제 하나를 골라 해결 화면을 종이에 그려 보기","친구 3명에게 그 문제가 진짜 불편한지 물어보기"],
+  certs:[["컴퓨터활용능력","문서·엑셀 기본기를 보여줄 수 있어요"],["자격증보다 중요한 것","기획은 ‘내가 정리한 문제와 설계’ 결과물로 평가받는 경우가 많아요"]],
+  week:{light:"앱 하나 골라 불편한 점 3개 + 개선 아이디어 1개 메모하기",standard:"친구·가족 3명에게 물어보고 개선 화면을 종이에 그리기",heavy:"인터뷰 5명 → 문제·해결 기능·AI가 틀릴 때 대응을 한 장으로 정리하기"}},
+ prompt:{name:"프롬프트 엔지니어",c:"amber",ic:"🤖",one:"AI에게 일을 시키는 ‘지시문’을 설계하고, 정말 잘 되는지 시험해서 고치는 사람",
+  what:["AI가 원하는 답을 내도록 지시문·예시·형식을 설계해요","여러 질문으로 시험해서 몇 개가 잘 됐는지 비교해요","AI가 틀리거나 이상한 답을 낼 때 고치는 규칙을 만들어요"],
+  day:[["오전","AI 답변 30개를 읽고 이상한 답 표시"],["점심 후","틀린 답을 유형별로 나누기"],["오후","지시문을 고쳐서 다시 시험"],["퇴근 전","고치기 전/후 결과를 표로 비교"]],
+  now:["같은 질문을 지시문만 바꿔 3번 해 보고 차이 적기","AI 답이 틀렸던 경험을 모아 보기 (왜 틀렸을까?)","‘시험 공부 계획 짜기’ 지시문을 점점 더 좋게 다듬어 보기"],
+  certs:[["국가 공인 자격 없음","이 분야는 아직 대표 국가자격이 확인되지 않아요. ‘개선 전/후 비교표’ 같은 결과물이 더 중요해요"],["함께 배우면 좋은 것","요즘은 기획·개발 일을 하면서 함께 하는 경우가 많아요"]],
+  week:{light:"뉴스 요약을 지시문 2가지로 시켜 보고 비교하기",standard:"같은 작업을 질문 10개 × 지시문 3가지로 시험하고 표 만들기",heavy:"질문 30개 + 채점 기준을 만들고 지시문을 3번 개선하기"}},
+ analyst:{name:"데이터 분석가",c:"teal",ic:"📊",one:"데이터에서 ‘왜 이런 일이 생겼는지’를 찾아서, 다른 사람이 결정할 수 있게 설명하는 사람",
+  what:["회사 데이터를 꺼내서(SQL) 정리해요","표와 그래프로 변화를 확인해요","‘왜 줄었는지/늘었는지’ 근거를 찾아 설명해요"],
+  day:[["오전","어제 이용자 수·매출 숫자 확인"],["점심 후","SQL로 필요한 데이터 꺼내기"],["오후","엑셀·파이썬으로 그래프 만들기"],["퇴근 전","팀에 ‘왜 이런 변화가 생겼는지’ 설명"]],
+  now:["한 달 용돈·지출을 시트에 정리하고 그래프 1개 만들기","컴활 공부하면서 함수·피벗테이블 익히기","공공데이터포털(data.go.kr)에서 우리 지역 데이터 하나 열어 보기"],
+  certs:[["컴퓨터활용능력","엑셀 실력을 보여주는 데 좋아요"],["정보처리기능사","컴퓨터·데이터베이스 기초를 공부할 수 있어요"],["나중에: SQLD·ADsP","데이터 분야 국가공인 자격. SQL을 배운 뒤 도전해 보세요"]],
+  week:{light:"내 일주일 데이터(지출·공부·수면)를 시트에 적고 그래프 1개",standard:"공공데이터 하나 받아서 질문 2개 세우고 그래프로 답하기",heavy:"위 미션 + SQL 기초 문제 20개 풀기"}},
+ llmdev:{name:"LLM 응용 개발자",c:"blue",ic:"🛠️",one:"ChatGPT 같은 AI를 앱·웹사이트 안에 넣어서, 사람들이 실제로 쓰는 기능으로 만드는 개발자",
+  what:["서버 프로그램을 만들고 AI와 연결해요","AI가 늦거나 틀릴 때도 서비스가 멈추지 않게 처리해요","데이터를 저장하고, 만든 서비스를 인터넷에 올려 운영해요"],
+  day:[["오전","새 기능 코드 작성"],["점심 후","AI 답이 늦을 때 처리하는 코드 추가"],["오후","테스트하고 다른 개발자와 코드 검토"],["퇴근 전","서비스에 올린 뒤 오류 없는지 확인"]],
+  now:["파이썬으로 계산기나 할 일 목록 만들어 보기","수업에서 배운 언어로 작은 프로그램 하나 끝까지 완성하기","만든 것을 캡처하고 ‘무엇을·왜·어떻게’ 3줄로 기록하기"],
+  certs:[["정보처리기능사","프로그래밍·데이터베이스 기초를 정리할 수 있어요"],["자격증보다 중요한 것","‘직접 만든 프로그램’이 가장 좋은 증거예요"]],
+  week:{light:"파이썬 기초(변수·조건문) 따라 하고 아주 작은 프로그램 1개",standard:"계산기 또는 할 일 목록 프로그램 완성하기",heavy:"위 프로그램 + GitHub에 올리고 설명(README) 쓰기"}}
+};
+var PLAN={
+ job:"바로 취업이 목표라면: 학교 취업지원 선생님과 꼭 상담하고, 수업·실습에서 만든 결과물을 사진과 함께 기록해 두세요. 현장실습이나 채용 연계 회사는 ‘무슨 일을 하는지’와 근무 조건을 꼭 확인하세요.",
+ college:"진학이 목표라면: 학과 이름보다 ‘무엇을 배우는지(교육과정)’를 비교해 보세요. 프로그래밍·데이터·통계 과목이 있는지 확인하면 좋아요.",
+ both:"먼저 일하면서 공부를 이어가는 길도 있어요. 회사와 제도마다 조건이 다르니 학교 선생님과 함께 알아보세요. 일하며 쌓은 경험은 나중에 큰 장점이 돼요.",
+ u:"아직 몰라도 괜찮아요. 이번 주 미션을 해 보고 ‘재미있었는지’를 기준으로 다시 생각해 봐요."
+};
+var EXP=[
+ {t:"체험 A — AI 활용",d:"AI 도구로 일상 문제 하나 해결해 보기 (여행 계획, 공부 계획, 긴 글 요약)",m:"30분~1시간 · 쉬움",ck:"AI 답을 더 좋게 만들려고 지시문을 고치는 게 재미있었나요?",j:"prompt"},
+ {t:"체험 B — 데이터 분석",d:"엑셀·구글 시트로 한 달 지출이나 반 설문 결과를 정리하고 그래프 만들기",m:"1~2시간 · 보통",ck:"정리하다가 ‘이건 왜 이렇지?’ 하는 궁금증이 생겼나요?",j:"analyst"},
+ {t:"체험 C — 프로그래밍",d:"파이썬으로 계산기나 할 일 목록 같은 작은 프로그램 만들기",m:"1~3시간 · 보통",ck:"오류가 났을 때 답답함보다 ‘고쳐 보고 싶다’가 컸나요?",j:"llmdev"}
+];
+var OX=[
+ {q:"AI 서비스를 만드는 사람은 모두 수학 천재여야 한다.",a:"X",e:"AI를 ‘활용’하는 기획·분석·개발 일은 수학보다 문제 해결과 꾸준함이 더 중요해요. AI 모델 자체를 연구하는 일은 수학이 많이 필요해요."},
+ {q:"ChatGPT 같은 AI의 답은 항상 정확하다.",a:"X",e:"AI는 그럴듯하지만 틀린 답을 낼 때가 있어요. 그래서 확인하고 고치는 사람이 필요해요."},
+ {q:"SQL은 데이터베이스에서 데이터를 꺼낼 때 쓰는 언어다.",a:"O",e:"맞아요! 데이터 분석가와 개발자가 매일 쓰는 언어예요."},
+ {q:"AI 도구에 내 주민번호나 친구 연락처를 넣어도 괜찮다.",a:"X",e:"개인정보는 AI 도구에 넣지 않는 게 기본 원칙이에요."},
+ {q:"‘프롬프트’는 AI에게 주는 지시문을 말한다.",a:"O",e:"맞아요! 지시문을 잘 쓰면 같은 AI도 훨씬 좋은 답을 내요."}
+];
+var TOPIC={day:"일하는 사람의 하루",hsjob:"고졸 취업",cert:"자격증",pf:"포트폴리오",nocode:"코딩 못해도?",math:"수학",ai:"AI와 일자리",college:"대학 진학"};
+
+/* ───── 상태 (이 화면에만 보관, 서버로 보내지 않음) ───── */
+var S={step:-1,ans:{}};
+try{var saved=JSON.parse(sessionStorage.getItem("s-survey")||"null");if(saved&&typeof saved.step==="number")S=saved;}catch(e){}
+function save(){try{sessionStorage.setItem("s-survey",JSON.stringify(S));}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function opt(q,id){for(var i=0;i<q.o.length;i++)if(q.o[i].id===id)return q.o[i];return null;}
+
+function compute(){
+  var sc={planner:0,prompt:0,analyst:0,llmdev:0},why=[],interest=0,signals=0;
+  [0,1,2].forEach(function(i){var o=opt(Q[i],S.ans[Q[i].id]);if(!o)return;
+    Object.keys(o.p||{}).forEach(function(k){sc[k]+=o.p[k];why.push({j:k,r:o.r});if(i<2){interest+=o.p[k];signals++;}});});
+  var q1=opt(Q[0],S.ans.q1),q2=opt(Q[1],S.ans.q2),q3=opt(Q[2],S.ans.q3),q4=opt(Q[3],S.ans.q4),q5=opt(Q[4],S.ans.q5);
+  var q1j=q1&&Object.keys(q1.p||{})[0],q2j=q2&&Object.keys(q2.p||{})[0];
+  var r={sc:sc,why:why,lv:(q3&&q3.lv)||"none",size:(q5&&q5.s)||"light",plan:(q4&&q4.id)||"u",q3:q3,q4:q4,q5:q5};
+  if(interest===0){r.mode="explore";r.start={ai:0,excel:1,code:2,project:2}[r.lv];if(r.start==null)r.start=0;return r;}
+  var ord=Object.keys(sc).sort(function(a,b){if(sc[b]!==sc[a])return sc[b]-sc[a];if(a===q2j)return-1;if(b===q2j)return 1;if(a===q1j)return-1;if(b===q1j)return 1;return TIE.indexOf(a)-TIE.indexOf(b);});
+  r.mode="job";r.p=ord[0];r.s=sc[ord[1]]>0?ord[1]:NEIGHBOR[ord[0]];r.weak=signals<=1;return r;
+}
+
+/* ───── 화면 ───── */
+var app=document.getElementById("app");
+function render(){
+  if(S.step<0)app.innerHTML=intro();
+  else if(S.step<Q.length)app.innerHTML=question(S.step);
+  else app.innerHTML=result(compute());
+  window.scrollTo(0,0);
+}
+function intro(){
+  return '<div class="card hero"><div class="eyebrow" style="color:inherit;opacity:.85">안양시 청년 일자리박람회 · AI·데이터 멘토링</div>'+
+  '<h1>2분 AI·데이터 진로 탐색</h1><p>질문 6개에 답하면, 지금 나에게 먼저 알아볼 만한 분야와 이번 주에 해 볼 미션을 알려 드려요.</p>'+
+  '<div class="badges"><span>⏱ 약 2분</span><span>🙅 이름·연락처 안 받아요</span><span>🔒 답변은 내 폰에만</span></div></div>'+
+  '<div class="card"><h2>이렇게 써 주세요</h2><ul><li>정답은 없어요. 모르면 <b>‘모르겠어요’</b>를 골라도 돼요.</li><li>결과는 적성검사가 아니라 <b>‘먼저 알아볼 만한 분야’</b>예요.</li><li>결과 화면 맨 아래 <b>‘멘토에게 보여주기’</b> 카드를 상담할 때 보여 주세요.</li></ul>'+
+  '<button class="btn primary" data-a="start" style="margin-top:10px">시작하기 →</button></div>'+
+  '<footer>답변은 서버로 전송되거나 저장되지 않아요. 창을 닫으면 사라집니다.</footer>';
+}
+function question(i){
+  var q=Q[i],cur=S.ans[q.id],multi=!!q.multi,sel=multi?(cur||[]):[cur];
+  return '<div class="card"><div class="qn">질문 '+(i+1)+' / '+Q.length+'</div><div class="bar"><i style="width:'+((i)/Q.length*100)+'%"></i></div>'+
+  '<div class="qt">'+esc(q.t)+'</div><div class="muted small">'+esc(q.h)+'</div><div class="opts">'+
+  q.o.map(function(o){return '<button class="opt'+(o.u?" unk":"")+(sel.indexOf(o.id)>=0?" sel":"")+'" data-o="'+o.id+'" aria-pressed="'+(sel.indexOf(o.id)>=0)+'"><span class="em">'+o.e+'</span><span>'+esc(o.l)+'</span></button>';}).join("")+
+  '</div><div class="row"><button class="btn" data-a="prev">← 이전</button>'+
+  (multi?'<button class="btn primary" data-a="next">결과 보기 →</button>':'')+'</div></div>';
+}
+function result(r){
+  var h='';
+  var showRows='';
+  var asks=(S.ans.q6||[]).map(function(k){return TOPIC[k];});
+  if(r.mode==="explore"){
+    var e0=EXP[r.start];
+    h+='<div class="card result-top c-gray"><div class="eyebrow">나의 결과</div><h1>🧭 탐색 시작형</h1>'+
+      '<p>아직 끌리는 쪽을 모르는 건 정말 자연스러운 일이에요. 처음부터 진로를 확실히 아는 사람은 많지 않아요.</p>'+
+      '<div class="note">그래서 직업을 고르기 전에, 이번 주에 <b>가볍게 체험</b> 하나를 해 보는 걸 추천해요. 해 보고 ‘시간 가는 줄 몰랐던 것’이 다음 방향이에요.</div></div>';
+    h+='<div class="card"><h2>이번 주 체험 3가지</h2>'+EXP.map(function(x,i){return '<div class="exp"'+(i===r.start?' style="border-color:var(--ok)"':'')+'><b>'+esc(x.t)+(i===r.start?' · 먼저 추천':'')+'</b><div>'+esc(x.d)+'</div><div class="small muted">'+esc(x.m)+'</div><div class="small" style="margin-top:4px">해 본 뒤 질문: '+esc(x.ck)+'</div></div>';}).join("")+'</div>';
+    h+='<div class="card"><h2>졸업 후 계획에 대한 한마디</h2><p>'+esc(PLAN[r.plan])+'</p></div>';
+    showRows='<dt>결과</dt><dd>탐색 시작형 (체험 '+"ABC"[r.start]+' 추천)</dd>';
+  } else {
+    var P=J[r.p],S2=J[r.s],why=r.why.filter(function(w){return w.j===r.p;});
+    h+='<div class="card result-top c-'+P.c+'"><div class="eyebrow">지금 답변으로 보면, 먼저 알아볼 만한 분야</div>'+
+      '<h1 class="jt"><span class="ic">'+P.ic+'</span>'+esc(P.name)+'</h1><p><b>'+esc(P.one)+'</b></p>'+
+      '<h3>왜 이 결과가 나왔을까?</h3><ul>'+why.map(function(w){return '<li>'+esc(w.r)+'</li>';}).join("")+'</ul>'+
+      (r.weak?'<div class="note warn">답변 중 한 가지만 이 분야를 가리켰어요. ‘정답’이 아니라 ‘한번 체험해 볼 후보’로 봐 주세요.</div>':'<div class="note">적성검사 결과가 아니에요. 해 보고 아니면 다른 쪽으로 바꾸면 돼요.</div>')+'</div>';
+    h+='<div class="card c-'+P.c+'"><h2>이 일은 이런 일을 해요</h2><ul>'+P.what.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
+      '<h3>하루 엿보기 <span class="small muted">(회사마다 달라요)</span></h3><ul class="day">'+P.day.map(function(d){return '<li><b>'+esc(d[0])+'</b><span>'+esc(d[1])+'</span></li>';}).join("")+'</ul></div>';
+    h+='<div class="card"><h2>고등학생인 지금 해 볼 수 있는 것</h2><ol>'+P.now.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol>'+
+      '<h3>🎯 이번 주 미션</h3><div class="mission">'+esc(P.week[r.size])+'</div></div>';
+    h+='<div class="card"><h2>도움이 될 수 있는 것</h2><ul>'+P.certs.map(function(c){return '<li><b>'+esc(c[0])+'</b> — '+esc(c[1])+'</li>';}).join("")+'</ul>'+
+      '<p class="small muted">자격증 응시 조건과 일정은 Q-Net 등 공식 사이트에서 꼭 확인하세요.</p></div>';
+    h+='<div class="card"><h2>졸업 후 계획에 대한 한마디</h2><p>'+esc(PLAN[r.plan])+'</p></div>';
+    h+='<div class="card c-'+S2.c+'"><h2>함께 알아보면 좋은 분야</h2><p class="jt" style="font-weight:800;font-size:1.05rem;margin:0 0 4px"><span class="ic">'+S2.ic+'</span>'+esc(S2.name)+'</p><p>'+esc(S2.one)+'</p><p class="small muted">가볍게 해 볼 것: '+esc(S2.week.light)+'</p></div>';
+    showRows='<dt>먼저 알아볼 분야</dt><dd>'+esc(P.name)+(r.weak?' (후보)':'')+'</dd><dt>함께 볼 분야</dt><dd>'+esc(S2.name)+'</dd>';
+  }
+  h+='<div class="card"><h2>⏳ 기다리는 동안 OX 퀴즈</h2>'+OX.map(function(x,i){return '<div class="ox" data-ox="'+i+'"><div class="q">Q'+(i+1)+'. '+esc(x.q)+'</div><div class="b"><button data-x="O">⭕ O</button><button data-x="X">❌ X</button></div><div class="a"></div></div>';}).join("")+'</div>';
+  h+='<div class="card show"><div class="eyebrow">상담할 때 이 카드를 멘토에게 보여 주세요</div><h2>👀 멘토에게 보여주기</h2><dl>'+showRows+
+    '<dt>경험</dt><dd>'+esc(r.q3?r.q3.l:"미응답")+'</dd><dt>졸업 후</dt><dd>'+esc(r.q4?r.q4.l:"미응답")+'</dd><dt>공부 시간</dt><dd>'+esc(r.q5?r.q5.l:"미응답")+'</dd>'+
+    '<dt>궁금한 것</dt><dd>'+(asks.length?asks.map(esc).join(", "):"없음")+'</dd></dl></div>';
+  h+='<div class="row"><button class="btn" data-a="prev">← 답 고치기</button><button class="btn" data-a="restart">처음부터 다시</button></div>'+
+    '<footer>결과 화면을 캡처해 두면 나중에 다시 볼 수 있어요.<br>답변은 서버로 전송되거나 저장되지 않아요.</footer>';
+  return h;
+}
+
+app.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;
+  var a=b.getAttribute("data-a"),o=b.getAttribute("data-o"),x=b.getAttribute("data-x");
+  if(a==="start"){S.step=0;S.ans={};}
+  else if(a==="prev"){S.step=Math.max(-1,S.step-1);}
+  else if(a==="next"){S.step++;}
+  else if(a==="restart"){S={step:-1,ans:{}};}
+  else if(o){
+    var q=Q[S.step];
+    if(q.multi){var cur=S.ans[q.id]||[],i=cur.indexOf(o);
+      if(i>=0)cur.splice(i,1);else if(cur.length<q.multi)cur.push(o);else{cur.shift();cur.push(o);}
+      S.ans[q.id]=cur;save();
+      Array.prototype.forEach.call(app.querySelectorAll(".opt"),function(el){var on=cur.indexOf(el.getAttribute("data-o"))>=0;el.classList.toggle("sel",on);el.setAttribute("aria-pressed",on);});
+      return;}
+    S.ans[q.id]=o;S.step++;
+  }
+  else if(x){var box=b.closest(".ox"),it=OX[+box.getAttribute("data-ox")],right=x===it.a;
+    box.classList.add("done");box.classList.toggle("right",right);box.classList.toggle("wrong",!right);
+    box.querySelector(".a").innerHTML=(right?"✅ 정답! ":"🙂 아쉬워요. 정답은 "+it.a+". ")+esc(it.e);return;}
+  else return;
+  save();render();
+});
+render();
+window.__S_TEST__={compute:function(ans){var keep=S;S={step:99,ans:ans};var r=compute();S=keep;return r;},Q:Q};
+})();
+</script>
+</body>
+</html>
