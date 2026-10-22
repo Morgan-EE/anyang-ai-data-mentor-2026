@@ -38,6 +38,10 @@
   }
   function card(title,body,cls){return '<section class="card'+(cls?' '+cls:'')+'"><h2>'+esc(title)+'</h2>'+body+'</section>';}
   function roleButtons(active){return '<div class="stack no-capture" data-html2canvas-ignore="true">'+D.order.map(function(id){return '<button class="btn'+(active===id?' primary':'')+'" data-job="'+id+'">'+D.jobs[id].icon+' '+esc(D.jobs[id].name)+(active===id?' · 현재 보기':'')+'</button>';}).join('')+'</div>';}
+  function llmRoleGuide(){
+    var L=window.MD.llmRoles;
+    return card('LLM 응용 개발과 모델 학습의 차이','<p>'+esc(L.intro)+'</p>'+L.roles.map(function(r){return '<div class="week"><h3>'+esc(r.name)+'</h3><p>'+esc(r.work)+'</p><div class="proof"><b>모델 튜닝: '+esc(r.tuning)+'</b><br>준비 역량: '+esc(r.skills)+'</div></div>';}).join('')+'<div class="note"><b>로컬 실행과 파인튜닝은 달라요</b><br>'+esc(L.distinction)+'</div><h3>하고 싶은 일로 고르기</h3>'+list(L.roles.map(function(r){return r.want+' → '+r.name;}))+'<h3>실제 서비스 개발 예시</h3><p>'+esc(L.practice)+'</p><p class="small muted">'+esc(L.note)+'</p><p class="small">개념 참고: '+L.sources.map(function(s){return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a>';}).join(' · ')+'</p>');
+  }
   function result(){
     var r=compute(state.answers),id=state.chosen||r.primary,j=D.jobs[id],exp=state.answers.experience,skills=state.answers.skills||[],h='';
     if(j){
@@ -46,6 +50,7 @@
       if(!state.chosen){h+=list(r.why[id]);if(r.ties.length>1)h+='<div class="note">관심과 작업 방식이 달라 <b>'+r.ties.map(function(k){return esc(D.jobs[k].name);}).join(' · ')+'</b>가 같은 점수입니다. 첫 관심을 먼저 표시했으며, 아래에서 각 직무의 계획을 비교할 수 있어요.</div>';else if(r.signals===1)h+='<div class="note">하나의 관심 응답으로 나온 후보입니다. 작은 실습으로 맞는지 확인해 보세요.</div>';}
       h+='<p class="small muted" style="margin-top:12px">전공과 경험 수준은 직무 점수에 반영하지 않습니다. 결과는 멘토가 만든 탐색 규칙에 따른 안내입니다.</p></section>';
       h+=card('이 직무에서 맡는 일',list(j.tasks));
+      if(id==='llmdev')h+=llmRoleGuide();
       h+=card('나의 준비 출발점','<div class="mission">'+esc(levels[exp])+'</div><p style="margin-top:12px">'+esc(D.majorAdvice[state.answers.major])+'</p><p class="small muted">자기보고 응답을 기준으로 한 안내이며, 실제 역량 평가나 지원 가능 판정은 아닙니다.</p>');
       var gaps=j.required.filter(function(k){return skills.indexOf(k)<0;});
       h+=card('역량 점검과 다음 행동',j.required.map(function(k){var done=skills.indexOf(k)>=0,s=D.skills[k];return '<div class="skill"><span class="skill-mark'+(done?' done':'')+'">'+(done?'경험 있음':'다음 학습')+'</span><div><b>'+esc(s.label)+'</b><div class="small muted">'+esc(done?'설명할 수 있는 실제 사례·코드·문서를 결과물로 연결하세요.':s.action)+'</div></div></div>';}).join('')+'<div class="note">'+(gaps.length?'먼저 채워 볼 항목: <b>'+esc(D.skills[gaps[0]].label)+'</b>. 한 번에 전부 배우기보다 아래 프로젝트에 필요한 범위부터 시작하세요.':'체크한 역량을 같은 프로젝트에서 함께 사용하고, 실패·한계까지 설명할 수 있는지 검증해 보세요.')+'</div>');

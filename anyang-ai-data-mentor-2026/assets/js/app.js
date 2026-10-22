@@ -511,12 +511,22 @@
   };
 
   /* ───────── job ───────── */
+  function llmRoleGuide() {
+    var L = D.llmRoles;
+    return '<section class="card section" id="llm-roles"><h2>LLM 응용 개발과 모델 학습은 어떻게 다를까요?</h2><p>' + esc(L.intro) + '</p>' +
+      '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>직무</th><th>주요 업무</th><th>모델 튜닝</th></tr></thead><tbody>' + L.roles.map(function (r) {
+        return '<tr><th scope="row">' + esc(r.name) + '</th><td>' + esc(r.work) + '</td><td>' + esc(r.tuning) + '</td></tr>';
+      }).join('') + '</tbody></table></div><div class="callout" style="margin-top:14px"><strong>로컬 실행과 파인튜닝 구분</strong>' + esc(L.distinction) + '</div>' +
+      '<h3 style="margin-top:16px">내가 하고 싶은 일로 구분하기</h3><ul>' + L.roles.map(function (r) { return '<li><b>' + esc(r.want) + '</b> → ' + esc(r.name) + '<div class="small muted">필요 역량: ' + esc(r.skills) + '</div></li>'; }).join('') + '</ul>' +
+      '<h3 style="margin-top:16px">실제 서비스 개발 예시</h3><p>' + esc(L.practice) + '</p><p class="small muted">' + esc(L.note) + '</p><p class="small" style="margin-top:10px">개념 참고: ' + L.sources.map(function (s) { return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '</a>'; }).join(' · ') + '</p></section>';
+  }
   var SECS = [
     ["overview", "정의·실제 업무"], ["fit", "이런 사람에게"], ["skills", "필요 역량"], ["path", "학습 순서"],
     ["portfolio", "포트폴리오"], ["certs", "자격증"], ["courses", "교육·채용공고"], ["interview", "면접·실수"], ["qna", "예상 Q&A"], ["scripts", "피드백 멘트"]
   ];
   P.job = function () {
     var j = JOB[route.parts[0]]; if (!j) return notFound();
+    var sections = j.id === 'llmdev' ? SECS.slice(0, 1).concat([['llm-roles', '모델 학습과 차이']], SECS.slice(1)) : SECS;
     var h = '<div class="c-' + j.color + '">' +
       '<div class="card job-hero"><div class="eyebrow">직무별 상담 가이드</div><h1>' + jobIcon(j) + esc(j.name) + "</h1>" +
       '<p style="font-size:1.08rem"><b>' + esc(j.oneLine) + '</b></p><p class="small muted" style="margin:0">' + esc(j.aka) + "</p>" +
@@ -524,11 +534,13 @@
       '<div id="scBox" style="margin-top:10px"></div></div>' +
       (j.trendNote ? '<div class="callout warn" style="margin-top:12px"><strong>요즘 흐름 → 루프 엔지니어링' + tag("M") + '</strong>' + esc(j.trendNote) + ' <a href="#/trend">AI 트렌드 4단계 보기 →</a></div>' : "") +
       (D.trend && D.trend.jobsMap[j.id] ? '<p class="small" style="margin:10px 0 0"><b>AI 트렌드 4단계에서 이 직무:</b> ' + esc(D.trend.jobsMap[j.id]) + ' · <a href="#/trend">4단계 보기</a></p>' : "") +
-      '<nav class="sec-nav" aria-label="섹션">' + SECS.map(function (s) { return '<a href="#/job/' + j.id + "/" + s[0] + '">' + s[1] + "</a>"; }).join("") + "</nav>" +
+      '<nav class="sec-nav" aria-label="섹션">' + sections.map(function (s) { return '<a href="#/job/' + j.id + "/" + s[0] + '">' + s[1] + "</a>"; }).join("") + "</nav>" +
 
-      '<section class="card section" id="overview"><h2>직무 정의</h2><p>' + esc(j.definition) + "</p>" +
+      '<section class="card section" id="overview"><h2>직무 정의</h2><p>' + esc(j.id === 'llmdev' ? D.llmRoles.intro : j.definition) + "</p>" +
         (j.distinction ? '<div class="callout warn"><strong>독립 직무 vs 다른 직무에 포함된 업무' + tag(j.distinction.tag) + "</strong>" + esc(j.distinction.text) + "</div>" : "") +
         '<h2 style="margin-top:16px">실제 업무 사례' + tag(j.tasks.tag) + "</h2>" + ul(j.tasks.items) + "</section>" +
+
+      (j.id === 'llmdev' ? llmRoleGuide() : '') +
 
       '<section class="card section" id="fit"><h2>이런 성향·활동에 관심 있다면 탐색해 볼 만해요</h2>' + ul(j.fit) +
         '<p class="small muted" style="margin:0">성향은 참고일 뿐, 맞지 않는다고 못 하는 직무는 아닙니다.</p></section>' +

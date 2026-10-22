@@ -164,6 +164,7 @@ var J={
   certs:[["컴퓨터활용능력","엑셀 실력을 보여주는 데 좋아요"],["정보처리기능사","컴퓨터·데이터베이스 기초를 공부할 수 있어요"],["나중에: SQLD·ADsP","데이터 분야 국가공인 자격. SQL을 배운 뒤 도전해 보세요"]],
   week:{light:"내 일주일 데이터(지출·공부·수면)를 시트에 적고 그래프 1개",standard:"공공데이터 하나 받아서 질문 2개 세우고 그래프로 답하기",heavy:"위 미션 + SQL 기초 문제 20개 풀기"}},
  llmdev:{name:"LLM 응용 개발자",c:"blue",ic:"🛠️",one:"ChatGPT 같은 AI를 앱·웹사이트 안에 넣어서, 사람들이 실제로 쓰는 기능으로 만드는 개발자",
+  distinction:"AI 모델을 직접 학습시키지 않아도 돼요. GPT·Claude 같은 API를 연결하거나 Llama 같은 모델을 직접 실행해 서비스를 만들 수 있어요. 모델을 내 컴퓨터에서 실행하는 것과, 데이터를 넣어 추가 학습하는 ‘파인튜닝’은 다른 일이에요.",
   tl:"루프 시대의 개발자는 AI가 일할 <b>도구와 환경(하네스)</b>을 만들고, 스스로 반복하는 <b>루프를 코드로 구현</b>해요. 지금 가장 많이 필요한 역할 중 하나예요.",
   what:["서버 프로그램을 만들고 AI와 연결해요","AI가 늦거나 틀릴 때도 서비스가 멈추지 않게 처리해요","데이터를 저장하고, 만든 서비스를 인터넷에 올려 운영해요"],
   day:[["오전","새 기능 코드 작성"],["점심 후","AI 답이 늦을 때 처리하는 코드 추가"],["오후","테스트하고 다른 개발자와 코드 검토"],["퇴근 전","서비스에 올린 뒤 오류 없는지 확인"]],
@@ -261,6 +262,7 @@ function result(r){
       '<h3>왜 이 결과가 나왔을까?</h3><ul>'+why.map(function(w){return '<li>'+esc(w.r)+'</li>';}).join("")+'</ul>'+
       (r.weak?'<div class="note warn">답변 중 한 가지만 이 분야를 가리켰어요. ‘정답’이 아니라 ‘한번 체험해 볼 후보’로 봐 주세요.</div>':'<div class="note">적성검사 결과가 아니에요. 해 보고 아니면 다른 쪽으로 바꾸면 돼요.</div>')+'</div>';
     h+='<div class="card c-'+P.c+'"><h2>이 일은 이런 일을 해요</h2><ul>'+P.what.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
+      (P.distinction?'<div class="note">'+esc(P.distinction)+'</div>':'')+
       '<h3>하루 엿보기 <span class="small muted">(회사마다 달라요)</span></h3><ul class="day">'+P.day.map(function(d){return '<li><b>'+esc(d[0])+'</b><span>'+esc(d[1])+'</span></li>';}).join("")+'</ul></div>';
     h+='<div class="card"><h2>고등학생인 지금 해 볼 수 있는 것</h2><ol>'+P.now.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol>'+
       '<h3>🎯 이번 주 미션</h3><div class="mission">'+esc(P.week[r.size])+'</div></div>';
