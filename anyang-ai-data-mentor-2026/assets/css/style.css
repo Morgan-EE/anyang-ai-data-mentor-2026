@@ -396,6 +396,9 @@ mark { background: #fff1a8; color: inherit; border-radius: 3px; padding: 0 1px; 
 .tl-big .tl-name { font-size: 1.6rem; }
 .tl-big .tl-line { font-size: 1.1rem; }
 .tl-big > .btn { margin-top: 14px; background: #f4f6f9; color: #141c2b; border-color: #e3e8ef; }
+.neural-figure { margin: 0; }
+.neural-img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--border); border-radius: 12px; }
+.neural-caption { margin-top: 8px; font-size: .84rem; color: var(--text-3); }
 @media (max-width: 640px) {
   .tl-big .tl-board { font-size: 1rem; padding: 20px 16px; }
   .tl-big .tl-title { font-size: 1.4rem; margin-bottom: 16px; }

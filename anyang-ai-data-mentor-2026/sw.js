@@ -1,7 +1,7 @@
 /* 오프라인 대비 캐시: 네트워크 우선, 실패 시 캐시 사용 (행사 직전 수정 내용이 바로 반영되도록) */
-var CACHE = "md-mentor-v3";
+var CACHE = "md-mentor-v4";
 var FILES = ["./", "index.html", "assets/css/style.css", "assets/js/app.js",
-  "data/mentor.js", "data/jobs.js", "data/explore.js", "data/levels.js", "data/faq.js", "data/resources.js", "data/survey.js", "data/trend.js"];
+  "assets/img/neural-network-overview.png", "data/mentor.js", "data/jobs.js", "data/explore.js", "data/levels.js", "data/faq.js", "data/resources.js", "data/survey.js", "data/trend.js", "data/neural.js"];
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
 });
