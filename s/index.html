@@ -62,6 +62,8 @@ ul{margin:0 0 6px;padding-left:1.2em}li{margin:4px 0}
 .show{border:2px solid var(--accent)}
 .show dl{display:grid;grid-template-columns:86px 1fr;gap:6px 10px;margin:8px 0 0}
 .show dt{color:var(--text-3);font-weight:800;font-size:.88rem}.show dd{margin:0;font-weight:700}
+.contact{text-align:center;background:var(--accent-soft)}
+.contact a{color:var(--accent);font-weight:800}
 .exp{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--surface-2)}
 .ox{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
 .ox .q{font-weight:700}
@@ -270,6 +272,7 @@ function result(r){
     '<dt>경험</dt><dd>'+esc(r.q3?r.q3.l:"미응답")+'</dd><dt>졸업 후</dt><dd>'+esc(r.q4?r.q4.l:"미응답")+'</dd><dt>공부 시간</dt><dd>'+esc(r.q5?r.q5.l:"미응답")+'</dd>'+
     '<dt>궁금한 것</dt><dd>'+(asks.length?asks.map(esc).join(", "):"없음")+'</dd></dl></div>';
   h+='<div class="row"><button class="btn" data-a="prev">← 답 고치기</button><button class="btn" data-a="restart">처음부터 다시</button></div>'+
+    '<div class="card contact"><h2>📬 진로 고민, 언제든 연락해요</h2><p>진로와 관련해 고민이 생기면 언제든 이메일을 보내 주세요. 함께 이야기해 볼게요.</p><a href="mailto:morgan109jb@gmail.com">morgan109jb@gmail.com</a></div>'+
     '<footer>결과 화면을 캡처해 두면 나중에 다시 볼 수 있어요.<br>답변은 서버로 전송되거나 저장되지 않아요.</footer>';
   return h;
 }
