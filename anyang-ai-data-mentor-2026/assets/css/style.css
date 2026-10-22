@@ -370,7 +370,7 @@ mark { background: #fff1a8; color: inherit; border-radius: 3px; padding: 0 1px; 
 .tl-text { display: flex; flex-direction: column; align-items: center; }
 .tl-name { font-size: 1.12rem; font-weight: 800; color: #f1f5f4; }
 .tl-step.now .tl-name { color: #4fe3c1; }
-.tl-line { font-size: .86rem; color: #a7b3af; margin-top: 4px; max-width: 7.2em; }
+.tl-line { font-size: .86rem; color: #a7b3af; margin-top: 4px; }
 .tl-src { font-size: .72rem; color: #6b7672; margin-top: 16px; text-align: right; }
 @media (max-width: 640px) {
   .tl-board { padding: 18px 16px 14px; }
@@ -381,6 +381,24 @@ mark { background: #fff1a8; color: inherit; border-radius: 3px; padding: 0 1px; 
   .tl-year { width: 38px; height: auto; text-align: right; flex: none; font-size: .74rem; }
   .tl-dot { margin: 0; flex: none; }
   .tl-text { align-items: flex-start; }
-  .tl-line { max-width: none; margin-top: 0; }
+  .tl-line { margin-top: 0; }
+  .tl-br { display: none; }
   .tl-src { text-align: left; }
+}
+
+/* 4단계 크게 보기 */
+.tl-big { width: min(1180px, 100%); max-height: 100%; overflow: auto; text-align: center; }
+.tl-big .tl-board { font-size: 1.35rem; padding: 36px 40px 24px; text-align: left; }
+.tl-big .tl-title { font-size: 2.2rem; margin-bottom: 36px; }
+.tl-big .tl::before { top: 44px; }
+.tl-big .tl-year { height: 28px; font-size: 1rem; }
+.tl-big .tl-dot { width: 32px; height: 32px; border-width: 3px; }
+.tl-big .tl-name { font-size: 1.6rem; }
+.tl-big .tl-line { font-size: 1.1rem; }
+.tl-big > .btn { margin-top: 14px; background: #f4f6f9; color: #141c2b; border-color: #e3e8ef; }
+@media (max-width: 640px) {
+  .tl-big .tl-board { font-size: 1rem; padding: 20px 16px; }
+  .tl-big .tl-title { font-size: 1.4rem; margin-bottom: 16px; }
+  .tl-big .tl::before { top: 18px; left: 63px; }
+  .tl-big .tl-name { font-size: 1.2rem; }
 }
