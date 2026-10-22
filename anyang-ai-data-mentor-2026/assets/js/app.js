@@ -189,6 +189,8 @@
       idx.push({ type: "직무 가이드 · " + j.name, title: "면접 어필·자주 하는 실수", snip: j.interview[0], route: "#/job/" + j.id + "/interview", hay: j.name + " 면접 실수", body: j.interview.join(" ") + " " + j.mistakes.join(" ") });
       idx.push({ type: "직무 가이드 · " + j.name, title: "피드백 멘트 (30~60초)", snip: j.scripts[0].text, route: "#/job/" + j.id + "/scripts", hay: j.name + " 멘트 피드백 대본 설명", body: "" });
       idx.push({ type: "직무 가이드 · " + j.name, title: "채용공고 확인 방법", snip: j.postings.keywords.join(", "), route: "#/job/" + j.id + "/courses", hay: j.name + " 채용공고 공고 검색 교육과정 국비", body: j.postings.how.join(" ") + " " + j.courses.items.join(" ") });
+      var posting = D.jobPostings.cases[j.id];
+      if (posting) idx.push({ type: "실제 채용공고 · " + j.name, title: posting.company + " — " + posting.title, snip: posting.focus, route: "#/job/" + j.id + "/hiring", hay: j.name + " " + posting.company + " " + posting.title + " 실제 채용공고 분석", body: posting.requirements.concat(posting.preferred, posting.prep.map(function (p) { return p.skill + " " + p.learn + " " + p.target; }), [posting.project.title, posting.message]).join(" ") });
     });
     (D.levels || []).forEach(function (l) {
       idx.push({ type: "수준별 조언", title: l.name, snip: l.tagline, route: "#/levels/" + l.id, hay: l.name + " " + l.tagline, body: [].concat(l.check, l.priority, l.notNow, [l.project, l.week]).join(" ") });
@@ -306,12 +308,16 @@
         trendDiagram() + '<div id="trendSay" hidden style="margin-top:12px">' + script("트렌드 30초", D.trend.say30) + '</div></section>' +
       '<section class="section" id="jobs" style="margin-top:24px"><div class="card-head"><h2>직무별 상담 가이드</h2><span class="small muted">행사 현수막 공식 직무 구분</span></div>' +
       '<div class="grid g4">' + JOBS.map(function (j) {
+        var posting = D.jobPostings.cases[j.id];
         return '<div class="card job-card c-' + j.color + '"><div class="jc-name">' + jobIcon(j) + esc(j.name) + "</div>" +
           '<div class="small">' + esc(j.short) + "</div>" +
           '<div class="btn-row" style="margin-top:auto"><a class="btn sm" href="#/job/' + j.id + '">가이드 열기</a>' +
           '<button class="btn sm" data-toggle="js-' + j.id + '">30초 설명</button></div>' +
+          (posting ? '<div class="small muted">공고 사례: ' + esc(posting.company) + '</div><a class="btn sm" href="#/job/' + j.id + '/hiring">실제 공고 분석 →</a>' : '') +
           '<div id="js-' + j.id + '" hidden>' + script("참가자에게", j.scripts[0].text) + "</div></div>";
       }).join("") + "</div></section>" +
+
+      hiringOverview() +
 
       '<div class="grid g2" style="margin-top:16px">' +
         '<section class="card section" id="openers"><h2>상담 시작 질문</h2><ol>' + D.openers.map(function (o) {
@@ -511,6 +517,31 @@
   };
 
   /* ───────── job ───────── */
+  function hiringOverview() {
+    var A = D.jobPostings;
+    return '<section class="card section" id="hiring" style="margin-top:24px"><div class="card-head"><h2>실제 채용공고로 보는 4개 직무</h2><span class="small muted">분석 기준일 ' + esc(A.date) + '</span></div><p>' + esc(A.intro) + '</p>' +
+      '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>직무·대표 공고</th><th>공고상 경력</th><th>먼저 준비할 것</th><th>상담 자료</th></tr></thead><tbody>' + JOBS.map(function (j) {
+        var p = A.cases[j.id];
+        return '<tr><th scope="row">' + esc(j.name) + '<div class="small muted">' + esc(p.company) + '</div></th><td>' + esc(p.career) + '</td><td>' + esc(p.focus) + '</td><td><a class="btn sm" href="#/job/' + j.id + '/hiring">분석 보기</a></td></tr>';
+      }).join('') + '</tbody></table></div><p class="small muted" style="margin-top:12px">' + esc(A.caution) + '</p><div style="margin-top:12px">' + script('공고를 함께 보며 시작하는 질문', A.question) + '</div></section>';
+  }
+  function hiringGuide(j) {
+    var A = D.jobPostings, p = A.cases[j.id];
+    if (!p) return '';
+    return '<section class="card section" id="hiring"><div class="card-head"><h2>실제 채용공고 분석' + tag('P') + '</h2><span class="small muted">기준일 ' + esc(A.date) + '</span></div>' +
+      '<h3>' + esc(p.company + ' · ' + p.title) + '</h3><dl class="kv"><dt>경력 조건</dt><dd>' + esc(p.career) + '</dd><dt>근무지역</dt><dd>' + esc(p.region) + '</dd><dt>접수·마감</dt><dd>' + esc(p.deadline) + '</dd></dl>' +
+      '<div class="btn-row" style="margin:12px 0"><a class="btn primary" href="' + esc(p.url) + '" target="_blank" rel="noopener">원본 공고 보기 · ' + esc(p.source) + '</a>' +
+      (p.relatedUrl ? '<a class="btn" href="' + esc(p.relatedUrl) + '" target="_blank" rel="noopener">고용24 연계 공고</a>' : '') + '</div>' +
+      '<div class="callout' + (p.verified ? '' : ' warn') + '"><strong>' + (p.verified ? '공고 본문 확인' : '첨부·검색 자료 기준') + '</strong>' + esc(p.verification) + '</div><p style="margin-top:12px">' + esc(p.context) + '</p>' +
+      '<div class="grid g2" style="margin-top:16px"><div><h3>' + (p.verified ? '공고에서 확인한 핵심 역량' : '첨부 분석의 핵심 역량') + '</h3>' + ul(p.requirements) + '</div>' +
+      '<div><h3>' + (p.verified ? '선호·우대 경험' : '첨부 분석의 우대 경험') + '</h3>' + (p.preferred.length ? ul(p.preferred) : '<p class="small muted">첨부에 별도 우대 목록은 없습니다. 원문 조건을 확인하세요.</p>') + '</div></div>' +
+      '<h3 style="margin-top:20px">학생에게 제안할 준비 방법' + tag('M') + '</h3><div class="tbl-wrap"><table class="tbl"><thead><tr><th>준비할 것</th><th>학습·실습 방법</th><th>목표 수준·보여 줄 증거</th></tr></thead><tbody>' + p.prep.map(function (x) {
+        return '<tr><th scope="row">' + esc(x.skill) + '</th><td>' + esc(x.learn) + '</td><td>' + esc(x.target) + '</td></tr>';
+      }).join('') + '</tbody></table></div><p class="small muted" style="margin-top:8px">이 표의 학습 방법과 목표 수준은 공고를 상담에 활용하기 위한 멘토 권장입니다. 모든 항목이 해당 공고의 필수요건이라는 뜻은 아닙니다.</p>' +
+      '<div class="port" style="margin-top:18px"><h3>추천 프로젝트: ' + esc(p.project.title) + '</h3><p>' + esc(p.project.desc) + '</p><h3>남길 결과물</h3>' + ul(p.project.proof) + '<p><b>추천 결과물: ' + esc(p.output) + '</b></p></div>' +
+      '<div style="margin-top:18px">' + script('멘토링 핵심 멘트', p.message) + '</div><h3 style="margin-top:18px">공고와 내 경험을 연결하는 질문</h3><p>' + esc(A.question) + '</p><ol>' + p.follow.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ol>' +
+      '<div class="callout" style="margin-top:14px"><strong>상담 마무리</strong>' + esc(A.conclusion) + '</div><p class="small muted" style="margin-top:12px">' + esc(A.caution) + '</p><p class="small"><a href="#/home/hiring">4개 직무 공고 비교로 돌아가기 →</a></p></section>';
+  }
   function llmRoleGuide() {
     var L = D.llmRoles;
     return '<section class="card section" id="llm-roles"><h2>LLM 응용 개발과 모델 학습은 어떻게 다를까요?</h2><p>' + esc(L.intro) + '</p>' +
@@ -522,7 +553,7 @@
   }
   var SECS = [
     ["overview", "정의·실제 업무"], ["fit", "이런 사람에게"], ["skills", "필요 역량"], ["path", "학습 순서"],
-    ["portfolio", "포트폴리오"], ["certs", "자격증"], ["courses", "교육·채용공고"], ["interview", "면접·실수"], ["qna", "예상 Q&A"], ["scripts", "피드백 멘트"]
+    ["portfolio", "포트폴리오"], ["certs", "자격증"], ["courses", "교육·채용공고"], ["hiring", "실제 공고 분석"], ["interview", "면접·실수"], ["qna", "예상 Q&A"], ["scripts", "피드백 멘트"]
   ];
   P.job = function () {
     var j = JOB[route.parts[0]]; if (!j) return notFound();
@@ -567,6 +598,8 @@
       '<section class="card section" id="courses"><h2>추천 교육과정·학습 자료' + tag(j.courses.tag) + "</h2>" + ul(j.courses.items) +
         '<p class="small"><a href="#/resources/criteria">국비지원 과정 고르는 기준 →</a> · 특정 과정의 모집 여부·비용·취업률은 확인하지 않았으므로 추천하지 않습니다.</p>' +
         '<h2 style="margin-top:16px">채용공고 확인 방법</h2><div>' + j.postings.keywords.map(function (k) { return '<span class="chip">' + esc(k) + "</span>"; }).join("") + "</div>" + ul(j.postings.how) + "</section>" +
+
+      hiringGuide(j) +
 
       '<section class="card section" id="interview"><div class="grid g2"><div><h2>면접에서 어필할 경험' + tag("M") + "</h2>" + ul(j.interview) + "</div>" +
         "<div><h2>자주 하는 실수" + tag("M") + "</h2>" + ul(j.mistakes) + "</div></div></section>" +
