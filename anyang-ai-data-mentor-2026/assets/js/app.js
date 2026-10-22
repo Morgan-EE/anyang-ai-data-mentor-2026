@@ -724,7 +724,7 @@
   /* ───────── 대기자 설문 (멘토 전용) ───────── */
   function openQR() {
     var o = document.createElement("div"); o.className = "qr-overlay"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "설문 QR 코드");
-    o.innerHTML = '<div class="qr-box"><div class="qr-title">📱 기다리는 동안 2분 진로 설문</div><div class="qr-img">' + D.survey.qrSvg + '</div>' +
+    o.innerHTML = '<div class="qr-box"><div class="qr-img">' + D.survey.qrSvg + '</div>' +
       '<div class="qr-url">' + esc(D.survey.url.replace("https://", "")) + '</div><div class="qr-sub">이름·연락처는 받지 않아요 · 결과 맨 아래 카드를 멘토에게 보여 주세요</div>' +
       '<button class="btn" data-close="1">닫기 (Esc)</button></div>';
     function close() { o.remove(); document.removeEventListener("keydown", esck); }
