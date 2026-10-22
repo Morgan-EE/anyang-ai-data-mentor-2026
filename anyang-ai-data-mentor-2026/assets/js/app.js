@@ -56,6 +56,7 @@
     faq: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',
     book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/>',
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',
+    loop: '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>',
     qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"/>'
   };
   function icon(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[n] || "") + "</svg>"; }
@@ -66,7 +67,8 @@
     { label: "상담", items: [
       { r: "home", t: "홈 / 상담 시작", i: "home" },
       { r: "explore", t: "진로를 모르겠어요", i: "compass", cta: true },
-      { r: "survey", t: "대기자 QR 설문", i: "qr" }
+      { r: "survey", t: "대기자 QR 설문", i: "qr" },
+      { r: "trend", t: "AI 트렌드 4단계", i: "loop" }
     ]},
     { label: "직무별 상담 가이드", items: JOBS.map(function (j) { return { r: "job/" + j.id, t: j.name, dot: j.color }; }) },
     { label: "자료", items: [
@@ -198,6 +200,7 @@
     });
     idx.push({ type: "홈", title: "멘토 자기소개 30초 / 1분", snip: D.mentor.intro30, route: "#/home/intro", hay: "자기소개 소개 멘토 인사", body: "" });
     idx.push({ type: "대기자 설문", title: "대기자 QR 설문 · 학생 결과 대응", snip: D.survey.handoutShort, route: "#/survey", hay: "qr 설문 대기 학생 결과지 공유 공개 큐알", body: D.survey.handout });
+    idx.push({ type: "AI 트렌드", title: "AI를 다루는 기술 4단계 (프롬프트·컨텍스트·하네스·루프)", snip: D.trend.say30, route: "#/trend", hay: "트렌드 루프 루프엔지니어링 하네스 컨텍스트 프롬프트 에이전트 agent 4단계", body: D.trend.steer });
     idx.push({ type: "홈", title: "마무리 멘트", snip: D.closings.short, route: "#/home/closing", hay: "마무리 끝 정리 멘트", body: "" });
     idx.push({ type: "홈", title: "상담 시작 질문", snip: D.openers[0].q, route: "#/home/openers", hay: "시작 질문 오프닝 첫 질문", body: "" });
     idx.forEach(function (e) { e.nT = norm(e.title); e.nH = norm(e.hay); e.nB = norm(e.body + " " + e.snip); });
@@ -295,6 +298,8 @@
         "</section>" +
       "</div>" +
 
+      '<section class="card section" id="trend" style="margin-top:16px"><div class="card-head"><h2>AI 트렌드 · AI를 다루는 기술 4단계</h2><div class="btn-row"><button class="btn sm" data-toggle="trendSay">30초 멘트</button><a class="btn sm" href="#/trend">자세히 →</a></div></div>' +
+        trendDiagram() + '<div id="trendSay" hidden style="margin-top:12px">' + script("트렌드 30초", D.trend.say30) + '</div></section>' +
       '<section class="section" id="jobs" style="margin-top:24px"><div class="card-head"><h2>직무별 상담 가이드</h2><span class="small muted">행사 현수막 공식 직무 구분</span></div>' +
       '<div class="grid g4">' + JOBS.map(function (j) {
         return '<div class="card job-card c-' + j.color + '"><div class="jc-name">' + jobIcon(j) + esc(j.name) + "</div>" +
@@ -513,6 +518,8 @@
       '<p style="font-size:1.08rem"><b>' + esc(j.oneLine) + '</b></p><p class="small muted" style="margin:0">' + esc(j.aka) + "</p>" +
       '<div class="btn-row" style="margin-top:12px">' + j.scripts.map(function (s, i) { return '<button class="btn sm" data-sc="' + i + '">' + esc(s.label) + "</button>"; }).join("") + "</div>" +
       '<div id="scBox" style="margin-top:10px"></div></div>' +
+      (j.trendNote ? '<div class="callout warn" style="margin-top:12px"><strong>요즘 흐름 → 루프 엔지니어링' + tag("M") + '</strong>' + esc(j.trendNote) + ' <a href="#/trend">AI 트렌드 4단계 보기 →</a></div>' : "") +
+      (D.trend && D.trend.jobsMap[j.id] ? '<p class="small" style="margin:10px 0 0"><b>AI 트렌드 4단계에서 이 직무:</b> ' + esc(D.trend.jobsMap[j.id]) + ' · <a href="#/trend">4단계 보기</a></p>' : "") +
       '<nav class="sec-nav" aria-label="섹션">' + SECS.map(function (s) { return '<a href="#/job/' + j.id + "/" + s[0] + '">' + s[1] + "</a>"; }).join("") + "</nav>" +
 
       '<section class="card section" id="overview"><h2>직무 정의</h2><p>' + esc(j.definition) + "</p>" +
@@ -672,6 +679,38 @@
         return '<a class="sp-item" style="display:block" href="' + e.route + '"><div class="sp-type">' + esc(e.type) + '</div><div class="sp-title">' + esc(e.title) + '</div><div class="sp-snip">' + esc(e.snip) + "</div></a>";
       }).join("") + "</div>" : '<div class="card"><p>결과가 없어요. 짧은 단어로 다시 검색해 보세요. (예: 자격증, 코딩, 포트폴리오)</p></div>');
   };
+  /* ───────── AI 트렌드 4단계 ───────── */
+  function trendDiagram() {
+    var T = D.trend;
+    return '<div class="tl-board" role="img" aria-label="' + esc(T.title + ": " + T.stages.map(function (s) { return s.name; }).join(" → ")) + '">' +
+      '<div class="tl-kicker">AI를 다루는 기술의 4단계</div>' +
+      '<div class="tl-title">AI를 다루는 기술은 <em>4단계</em>로 진화</div><ol class="tl">' +
+      T.stages.map(function (s) {
+        return '<li class="tl-step' + (s.now ? " now" : "") + '"><span class="tl-year">' + esc(s.year) + '</span><span class="tl-dot"></span>' +
+          '<span class="tl-text"><b class="tl-name">' + esc(s.name) + '</b><span class="tl-line">' + esc(s.line) + '</span></span></li>';
+      }).join("") + '</ol><div class="tl-src">' + esc(T.source.label) + '</div></div>';
+  }
+  P.trend = function () {
+    var T = D.trend;
+    return '<div class="page-head"><div class="eyebrow">상담 소재 · 멘토 견해' + tag("M") + '</div><h1>AI 트렌드: AI를 다루는 기술 4단계</h1>' +
+      '<p>' + esc(T.note) + ' <a href="' + esc(T.source.url) + '" target="_blank" rel="noopener">영상 보기</a></p></div>' +
+      trendDiagram() +
+      '<div class="grid g2" style="margin-top:16px"><section class="card">' + script("트렌드 설명 30초", T.say30) + '</section>' +
+      '<section class="card">' + script("프롬프트 엔지니어 관심 학생 → 루프 엔지니어링으로 안내", T.steer) + '</section></div>' +
+      '<section class="card" style="margin-top:16px"><h2>단계별로 쉽게 설명하기 (자기소개서 예시)</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th style="width:13%">단계</th><th>무엇을 하나</th><th>예시</th><th style="width:22%">사람의 역할</th></tr></thead><tbody>' +
+        T.stages.map(function (s) { return '<tr><td><b>' + esc(s.name) + '</b><div class="small muted">' + esc(s.en) + (s.year ? " · " + esc(s.year) : "") + '</div></td><td>' + esc(s.desc) + '</td><td>' + esc(s.ex) + '</td><td>' + esc(s.human) + '</td></tr>'; }).join("") +
+      '</tbody></table></div></section>' +
+      '<div class="grid g2" style="margin-top:16px">' +
+        '<section class="card"><h2>루프 엔지니어링에 필요한 힘</h2>' + ul(T.loopSkills) + '</section>' +
+        '<section class="card"><h2>학생이 지금 해 볼 수 있는 것</h2><ol>' + T.start.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ol></section>' +
+      '</div>' +
+      '<section class="card" style="margin-top:16px"><h2>4개 직무와 연결하기</h2><div class="tbl-wrap"><table class="tbl"><tbody>' +
+        JOBS.map(function (j) { return '<tr><td style="width:24%"><a href="#/job/' + j.id + '"><b>' + esc(j.name) + '</b></a></td><td>' + esc(T.jobsMap[j.id]) + '</td></tr>'; }).join("") +
+      '</tbody></table></div><div class="callout warn" style="margin-top:12px"><strong>채용공고 관찰' + tag("P") + '</strong>' + esc(T.postingNote) + '</div></section>' +
+      '<section class="card" style="margin-top:16px"><h2>참고 영상에서 더 다루는 주제</h2><div>' + T.videoTopics.map(function (t) { return '<span class="chip">' + esc(t) + '</span>'; }).join("") +
+        '</div><p class="small muted" style="margin-top:8px">영상 목차 기준입니다. 세부 내용은 영상에서 직접 확인하세요. <a href="' + esc(T.source.url) + '" target="_blank" rel="noopener">' + esc(T.source.label) + '</a></p></section>';
+  };
+
   /* ───────── 대기자 설문 (멘토 전용) ───────── */
   function openQR() {
     var o = document.createElement("div"); o.className = "qr-overlay"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "설문 QR 코드");
@@ -752,7 +791,7 @@
     void samePage;
   }
   function titleFor(r) {
-    return { home: "", survey: "대기자 QR 설문", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
+    return { home: "", trend: "AI 트렌드 4단계", survey: "대기자 QR 설문", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
       (r.page === "job" && JOB[r.parts[0]] ? JOB[r.parts[0]].name : "");
   }
 
