@@ -298,7 +298,7 @@
         "</section>" +
       "</div>" +
 
-      '<section class="card section" id="trend" style="margin-top:16px"><div class="card-head"><h2>AI 트렌드 · AI를 다루는 기술 4단계</h2><div class="btn-row"><button class="btn sm" data-toggle="trendSay">30초 멘트</button><a class="btn sm" href="#/trend">자세히 →</a></div></div>' +
+      '<section class="card section" id="trend" style="margin-top:16px"><div class="card-head"><h2>AI 트렌드 · AI를 다루는 기술 4단계</h2><div class="btn-row"><button class="btn primary sm" data-trendbig="1">크게 보기</button><button class="btn sm" data-toggle="trendSay">30초 멘트</button><a class="btn sm" href="#/trend">자세히 →</a></div></div>' +
         trendDiagram() + '<div id="trendSay" hidden style="margin-top:12px">' + script("트렌드 30초", D.trend.say30) + '</div></section>' +
       '<section class="section" id="jobs" style="margin-top:24px"><div class="card-head"><h2>직무별 상담 가이드</h2><span class="small muted">행사 현수막 공식 직무 구분</span></div>' +
       '<div class="grid g4">' + JOBS.map(function (j) {
@@ -687,13 +687,23 @@
       '<div class="tl-title">AI를 다루는 기술은 <em>4단계</em>로 진화</div><ol class="tl">' +
       T.stages.map(function (s) {
         return '<li class="tl-step' + (s.now ? " now" : "") + '"><span class="tl-year">' + esc(s.year) + '</span><span class="tl-dot"></span>' +
-          '<span class="tl-text"><b class="tl-name">' + esc(s.name) + '</b><span class="tl-line">' + esc(s.line) + '</span></span></li>';
+          '<span class="tl-text"><b class="tl-name">' + esc(s.name) + '</b><span class="tl-line">' + esc(s.line.split(" ").slice(0, 2).join(" ")) + '<br class="tl-br"> ' + esc(s.line.split(" ").slice(2).join(" ")) + '</span></span></li>';
       }).join("") + '</ol><div class="tl-src">' + esc(T.source.label) + '</div></div>';
+  }
+  function openTrendBig() {
+    var o = document.createElement("div"); o.className = "qr-overlay tl-overlay"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "AI를 다루는 기술 4단계");
+    o.innerHTML = '<div class="tl-big">' + trendDiagram() + '<button class="btn" data-close="1">닫기 (Esc)</button></div>';
+    function close() { o.remove(); document.removeEventListener("keydown", esck); window.removeEventListener("hashchange", close); }
+    function esck(e) { if (e.key === "Escape") close(); }
+    o.addEventListener("click", function (e) { if (e.target === o || e.target.closest("[data-close]")) close(); });
+    document.addEventListener("keydown", esck); window.addEventListener("hashchange", close);
+    document.body.appendChild(o); o.querySelector("[data-close]").focus();
   }
   P.trend = function () {
     var T = D.trend;
     return '<div class="page-head"><div class="eyebrow">상담 소재 · 멘토 견해' + tag("M") + '</div><h1>AI 트렌드: AI를 다루는 기술 4단계</h1>' +
       '<p>' + esc(T.note) + ' <a href="' + esc(T.source.url) + '" target="_blank" rel="noopener">영상 보기</a></p></div>' +
+      '<div class="btn-row" style="margin-bottom:10px"><button class="btn primary" data-trendbig="1">크게 보기 (학생에게 화면 보여주기)</button></div>' +
       trendDiagram() +
       '<div class="grid g2" style="margin-top:16px"><section class="card">' + script("트렌드 설명 30초", T.say30) + '</section>' +
       '<section class="card">' + script("프롬프트 엔지니어 관심 학생 → 루프 엔지니어링으로 안내", T.steer) + '</section></div>' +
@@ -761,6 +771,7 @@
   }
   function commonClick(ev) {
     var qb = ev.target.closest("[data-qr]"); if (qb) { openQR(); return; }
+    var tb = ev.target.closest("[data-trendbig]"); if (tb) { openTrendBig(); return; }
     var c = ev.target.closest("[data-copy]"); if (c) { copyText(c.getAttribute("data-copy")); return; }
     var t = ev.target.closest("[data-toggle]"); if (t) { var el = document.getElementById(t.getAttribute("data-toggle")); el.hidden = !el.hidden; t.classList.toggle("on", !el.hidden); return; }
     var d = ev.target.closest("[data-dur]"); if (d) { timerSetDur(+d.getAttribute("data-dur")); return; }
