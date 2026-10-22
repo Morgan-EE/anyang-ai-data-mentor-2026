@@ -355,3 +355,32 @@ mark { background: #fff1a8; color: inherit; border-radius: 3px; padding: 0 1px; 
 .qr-url { font-weight: 800; margin-top: 10px; word-break: break-all; }
 .qr-sub { color: #465267; font-size: .92rem; margin: 6px 0 14px; }
 .qr-box .btn { background: #f4f6f9; color: #141c2b; border-color: #e3e8ef; }
+
+/* ── AI 트렌드 4단계 (다이어그램은 항상 어두운 슬라이드 스타일) ── */
+.tl-board { background: #050607; color: #f1f5f4; border-radius: 16px; padding: 22px 24px 16px; border: 1px solid #1d2422; }
+.tl-kicker { font-size: .78rem; color: #8a9692; margin-bottom: 14px; }
+.tl-title { text-align: center; font-weight: 800; font-size: 1.45rem; line-height: 1.35; margin: 4px 0 22px; letter-spacing: -.01em; }
+.tl-title em { font-style: normal; color: #4fe3c1; }
+.tl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+.tl::before { content: ""; position: absolute; left: 4%; right: 4%; top: 33px; border-top: 2px dashed #2c6e5f; }
+.tl-step { position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 4px; }
+.tl-year { height: 20px; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: .82rem; color: #4fe3c1; letter-spacing: .06em; }
+.tl-dot { width: 24px; height: 24px; border-radius: 50%; border: 2.5px solid #4fe3c1; background: #050607; margin: 2px 0 10px; position: relative; z-index: 1; }
+.tl-step.now .tl-dot { background: #4fe3c1; box-shadow: 0 0 0 5px rgba(79, 227, 193, .18); }
+.tl-text { display: flex; flex-direction: column; align-items: center; }
+.tl-name { font-size: 1.12rem; font-weight: 800; color: #f1f5f4; }
+.tl-step.now .tl-name { color: #4fe3c1; }
+.tl-line { font-size: .86rem; color: #a7b3af; margin-top: 4px; max-width: 7.2em; }
+.tl-src { font-size: .72rem; color: #6b7672; margin-top: 16px; text-align: right; }
+@media (max-width: 640px) {
+  .tl-board { padding: 18px 16px 14px; }
+  .tl-title { font-size: 1.2rem; margin-bottom: 14px; }
+  .tl { grid-template-columns: 1fr; gap: 6px; }
+  .tl::before { left: 59px; right: auto; top: 14px; bottom: 14px; border-top: 0; border-left: 2px dashed #2c6e5f; }
+  .tl-step { flex-direction: row; text-align: left; align-items: center; gap: 10px; padding: 6px 0; }
+  .tl-year { width: 38px; height: auto; text-align: right; flex: none; font-size: .74rem; }
+  .tl-dot { margin: 0; flex: none; }
+  .tl-text { align-items: flex-start; }
+  .tl-line { max-width: none; margin-top: 0; }
+  .tl-src { text-align: left; }
+}
