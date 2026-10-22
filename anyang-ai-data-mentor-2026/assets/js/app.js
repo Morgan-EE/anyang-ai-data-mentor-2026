@@ -803,22 +803,27 @@
       '<section class="card" style="margin-top:16px"><h2>4개 직무로 이어가기</h2><div class="btn-row">' + JOBS.map(function (j) { return '<a class="btn" href="#/job/' + j.id + '">' + esc(j.name) + '</a>'; }).join('') + '</div><p class="small muted" style="margin-top:12px">학생용 2분 설문은 기존 주소에 유지됩니다. <a href="#/survey">고등학생용 QR 설문 보기 →</a></p></section>';
   };
   P.survey = function () {
-    var S = D.survey, cur = route.parts[0] || "planner";
+    var S = D.survey, G = S.graduate, cur = route.parts[0] || "planner";
     var tname = function (id) { return id === "explore" ? "탐색 시작형 (모두 모르겠음)" : JOB[id].name; };
     var t = S.types.filter(function (x) { return x.id === cur; })[0] || S.types[0];
     var say = t.id === "explore" ? D.explore.mentorScript.allUnknown : D.explore.cards[t.id].say;
     var faqById = {}; D.faq.forEach(function (f) { faqById[f.id] = f; });
     return '<div class="page-head"><div class="eyebrow">멘토 전용 · 학생에게는 QR만 보여 주세요</div><h1>대기자 QR 설문</h1>' +
-      '<p>한 명과 상담하는 동안 나머지 학생은 휴대폰으로 2분 설문 → 결과지를 읽으며 기다립니다. 설문 기준은 \'진로 탐색\'과 같습니다.</p></div>' +
+      '<p>한 명과 상담하는 동안 나머지 참가자는 휴대폰으로 설문에 답하고 결과지를 읽으며 기다립니다. 고등학생용(약 2분)과 대졸자용(약 3분) 중 대상에 맞는 QR을 보여 주세요.</p></div>' +
       '<div class="grid g2">' +
-        '<section class="card"><div class="card-head"><h2>공유하기</h2><span class="tag tag-P">공개 페이지</span></div>' +
+        '<section class="card"><div class="card-head"><h2>고등학생용 QR 설문</h2><span class="tag tag-P">약 2분 · 6개 질문</span></div>' +
           '<div class="qr-inline">' + S.qrSvg + '</div>' +
           '<p class="small" style="margin-top:8px;word-break:break-all"><a href="' + esc(S.url) + '" target="_blank" rel="noopener">' + esc(S.url) + '</a></p>' +
           '<div class="btn-row"><button class="btn primary" data-qr="1">QR 크게 보기</button><button class="btn" data-copy="' + esc(S.url) + '">링크 복사</button><a class="btn" href="' + esc(S.url) + '" target="_blank" rel="noopener">학생 화면 미리보기</a></div>' +
           '<p class="small muted" style="margin-top:8px">공개 페이지에는 이 대시보드 링크가 없습니다. 다만 주소를 아는 누구나 두 페이지 모두 열 수 있습니다.</p></section>' +
-        '<section class="card"><h2>안내 멘트</h2>' + script("기다리는 학생에게", S.handout) + '<h3 style="margin-top:14px">운영 방법' + tag("M") + '</h3>' + ul(S.howTo, "small") + '</section>' +
+        '<section class="card"><div class="card-head"><h2>대졸자용 QR 설문</h2><span class="tag tag-P">약 3분 · 8개 질문</span></div>' +
+          '<div class="qr-inline">' + G.qrSvg + '</div>' +
+          '<p class="small" style="margin-top:8px;word-break:break-all"><a href="' + esc(G.url) + '" target="_blank" rel="noopener">' + esc(G.url) + '</a></p>' +
+          '<div class="btn-row"><button class="btn primary" data-qr="graduate">QR 크게 보기</button><button class="btn" data-copy="' + esc(G.url) + '">링크 복사</button><a class="btn" href="' + esc(G.url) + '" target="_blank" rel="noopener">대졸자 화면 열기</a></div>' +
+          '<p class="small muted" style="margin-top:8px">대졸자·졸업예정자 대상. 전공·경험·역량을 반영해 직무별 4주 계획과 포트폴리오를 안내합니다. <a href="#/graduate">대졸자 상담 운영 가이드 →</a></p></section>' +
       '</div>' +
-      '<section class="card" style="margin-top:16px"><div class="card-head"><h2>학생 결과 유형별 대응</h2><span class="small muted">학생 카드의 \'먼저 알아볼 분야\'를 고르세요</span></div>' +
+      '<section class="card" style="margin-top:16px"><h2>고등학생용 안내 멘트</h2>' + script("기다리는 학생에게", S.handout) + '<h3 style="margin-top:14px">운영 방법' + tag("M") + '</h3>' + ul(S.howTo, "small") + '</section>' +
+      '<section class="card" style="margin-top:16px"><div class="card-head"><h2>고등학생 결과 유형별 대응</h2><span class="small muted">학생 카드의 \'먼저 알아볼 분야\'를 고르세요</span></div>' +
         '<div class="level-tabs">' + S.types.map(function (x) { return '<a class="btn sm' + (x.id === t.id ? " on" : "") + '" href="#/survey/' + x.id + '">' + esc(tname(x.id)) + '</a>'; }).join("") + '</div>' +
         '<div class="grid g2"><div>' + script("30초 이어가기 멘트", say) + '</div><div><h3>이어서 물어볼 질문</h3><ol>' + t.follow.map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + '</ol>' +
         (t.id === "explore" ? '<a class="btn sm" href="#/explore/experiences">입문 체험 A·B·C 자세히 →</a>' : '<a class="btn sm" href="#/job/' + t.id + '">' + esc(JOB[t.id].name) + ' 가이드 →</a> <a class="btn sm" href="#/levels/vocational">특성화고 조언 →</a>') +
