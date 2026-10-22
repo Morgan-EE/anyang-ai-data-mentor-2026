@@ -64,6 +64,9 @@ ul{margin:0 0 6px;padding-left:1.2em}li{margin:4px 0}
 .show dt{color:var(--text-3);font-weight:800;font-size:.88rem}.show dd{margin:0;font-weight:700}
 .contact{text-align:center;background:var(--accent-soft)}
 .contact a{color:var(--accent);font-weight:800}
+.save-card{text-align:center}
+.save-status{min-height:1.5em;margin:10px 0 0;font-size:.86rem;color:var(--text-2)}
+.save-status.error{color:#c2352b}
 .exp{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--surface-2)}
 .ox{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
 .ox .q{font-weight:700}
@@ -92,6 +95,7 @@ footer{margin-top:22px;font-size:.8rem;color:var(--text-3);text-align:center}
 </head>
 <body>
 <div class="wrap" id="app"></div>
+<script src="assets/html2canvas.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -273,8 +277,38 @@ function result(r){
     '<dt>궁금한 것</dt><dd>'+(asks.length?asks.map(esc).join(", "):"없음")+'</dd></dl></div>';
   h+='<div class="row"><button class="btn" data-a="prev">← 답 고치기</button><button class="btn" data-a="restart">처음부터 다시</button></div>'+
     '<div class="card contact"><h2>📬 진로 고민, 언제든 연락해요</h2><p>진로와 관련해 고민이 생기면 언제든 이메일을 보내 주세요. 함께 이야기해 볼게요.</p><a href="mailto:morgan109jb@gmail.com">morgan109jb@gmail.com</a></div>'+
+    '<div class="card save-card"><h2>🖼️ 결과 페이지 저장하기</h2><p class="small muted">지금 나온 결과 전체를 한 장의 이미지로 저장할 수 있어요.</p><button class="btn primary" type="button" data-a="save-image">결과 페이지를 이미지로 저장</button><p class="save-status" id="saveImageStatus" aria-live="polite"></p></div>'+
     '<footer>결과 화면을 캡처해 두면 나중에 다시 볼 수 있어요.<br>답변은 서버로 전송되거나 저장되지 않아요.</footer>';
   return h;
+}
+
+function setSaveStatus(message,isError){
+  var status=document.getElementById("saveImageStatus");
+  if(!status)return;
+  status.textContent=message;
+  status.classList.toggle("error",!!isError);
+}
+function downloadImage(blob){
+  var url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="AI-데이터-진로탐색-결과.png";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},1000);
+}
+function saveResultImage(){
+  var button=app.querySelector('[data-a="save-image"]');
+  if(!button||!window.html2canvas){setSaveStatus("이미지 저장 기능을 불러오지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.",true);return;}
+  var label=button.textContent,target=document.querySelector(".wrap");
+  button.disabled=true;button.textContent="이미지 만드는 중…";setSaveStatus("결과 페이지를 이미지로 만들고 있어요.");
+  html2canvas(target,{backgroundColor:getComputedStyle(document.body).backgroundColor,scale:Math.min(Math.max(window.devicePixelRatio||1,1),2),useCORS:true,logging:false,scrollX:0,scrollY:-window.scrollY}).then(function(canvas){
+    return new Promise(function(resolve){canvas.toBlob(resolve,"image/png");});
+  }).then(function(blob){
+    if(!blob)throw new Error("PNG 생성 실패");
+    var file=new File([blob],"AI-데이터-진로탐색-결과.png",{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      return navigator.share({files:[file],title:"AI·데이터 진로 탐색 결과"}).then(function(){setSaveStatus("공유 메뉴에서 이미지 저장 또는 전송을 완료했어요.");}).catch(function(error){if(error&&error.name==="AbortError"){setSaveStatus("저장이 취소됐어요.");return;}downloadImage(blob);setSaveStatus("이미지를 다운로드했어요.");});
+    }
+    downloadImage(blob);setSaveStatus("이미지를 다운로드했어요.");
+  }).catch(function(){setSaveStatus("이미지를 저장하지 못했어요. 다시 시도해 주세요.",true);}).finally(function(){button.disabled=false;button.textContent=label;});
 }
 
 app.addEventListener("click",function(ev){
@@ -284,6 +318,7 @@ app.addEventListener("click",function(ev){
   else if(a==="prev"){S.step=Math.max(-1,S.step-1);}
   else if(a==="next"){S.step++;}
   else if(a==="restart"){S={step:-1,ans:{}};}
+  else if(a==="save-image"){saveResultImage();return;}
   else if(o){
     var q=Q[S.step];
     if(q.multi){var cur=S.ans[q.id]||[],i=cur.indexOf(o);
