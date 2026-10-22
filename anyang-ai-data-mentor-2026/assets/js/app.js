@@ -195,7 +195,7 @@
     (D.levels || []).forEach(function (l) {
       idx.push({ type: "수준별 조언", title: l.name, snip: l.tagline, route: "#/levels/" + l.id, hay: l.name + " " + l.tagline, body: [].concat(l.check, l.priority, l.notNow, [l.project, l.week]).join(" ") });
     });
-    idx.push({ type: "진로 탐색", title: "진로 탐색 시작 (관심 분야가 없을 때)", snip: "질문 5개로 먼저 탐색할 분야 찾기 · 모두 모르겠다면 체험 A·B·C", route: "#/explore", hay: "진로 탐색 모르겠 관심 분야 적성 체험", body: "" });
+    idx.push({ type: "진로 탐색", title: "학생 결과 유형·관심 직무 바로 보기", snip: "4개 직무와 탐색 시작형 중 직접 선택 → 설명 멘트·첫 학습·실천 과제", route: "#/explore", hay: "진로 탐색 모르겠 관심 분야 적성 체험 결과 직접 선택", body: "" });
     (D.explore.experiences || []).forEach(function (e) {
       idx.push({ type: "진로 탐색 · 입문 체험", title: e.title, snip: e.desc, route: "#/explore/experiences", hay: e.title + " 체험 " + e.examples.join(" "), body: e.desc });
     });
@@ -290,8 +290,8 @@
       '<div class="page-head"><div class="eyebrow">' + esc(D.event.dateLabel + " · " + D.event.place + " · " + D.event.format) + "</div>" +
       "<h1>AI·데이터 멘토링 상담 대시보드</h1><p>" + esc(m.name) + " 멘토 · " + esc(m.role) + "</p></div>" +
 
-      '<div class="cta-hero"><div><h2>아직 관심 분야가 없어요</h2><p>질문 5개, 2~3분이면 먼저 탐색할 분야와 이번 주 실천 과제가 나와요.</p></div>' +
-      '<a class="btn" href="#/explore">진로 탐색 시작 →</a></div>' +
+      '<div class="cta-hero"><div><h2>학생 결과에 맞춰 바로 설명하기</h2><p>학생 결과 유형이나 관심 직무를 고르면 설명 멘트·첫 학습·실천 과제를 바로 볼 수 있어요.</p></div>' +
+      '<a class="btn" href="#/explore">결과 유형 바로 보기 →</a></div>' +
       '<div class="card qr-strip"><div><b>기다리는 학생이 있나요?</b> <span class="small muted">' + esc(D.survey.handoutShort) + '</span></div>' +
       '<div class="btn-row"><button class="btn primary sm" data-qr="1">QR 크게 보기</button><a class="btn sm" href="#/survey">설문 대응 가이드</a></div></div>' +
 
@@ -361,7 +361,7 @@
   }
 
   /* ───────── explore ───────── */
-  var EX = { step: 0, ans: {} };
+  var EX = { level: "none", size: "light" };
   function exOpt(qi, oid) { var q = D.explore.questions[qi]; return q.options.filter(function (o) { return o.id === oid; })[0]; }
   function computeExplore(ans) {
     var E = D.explore, Q = E.questions;
@@ -397,123 +397,42 @@
     res.weak = interestSignals <= 1;
     return res;
   }
-  var FOCUS_SEC = { know: "", fit: "", study: "path", portfolio: "portfolio", apply: "courses" };
 
   P.explore = function () {
-    var E = D.explore, Q = E.questions;
-    if (route.parts[0] === "experiences" && !EX.started) { EX.started = true; EX.step = Q.length; EX.ans = { q1: "u", q2: "u", q3: "u", q4: "u", q5: "u" }; }
-    var head = '<div class="page-head"><div class="eyebrow">진로 미결정자 상담 모드</div><h1>진로 탐색</h1>' +
-      "<p>적성 검사가 아니라, 지금 답변을 바탕으로 <b>먼저 탐색할 만한 분야</b>를 찾는 대화 도구입니다. 응답은 이 화면에만 있고 저장·전송되지 않습니다.</p></div>";
-    if (!EX.started) {
-      return head + '<div class="card stack">' + script("시작 멘트 (참가자에게)", E.mentorScript.start) +
-        '<div class="callout"><strong>그룹 진행 팁</strong>' + esc(E.mentorScript.groupTip) + "</div>" +
-        '<div class="btn-row"><button class="btn primary" data-ex="begin" style="height:48px;font-size:1.05rem">질문 시작하기 →</button>' +
-        '<a class="btn" href="#/explore/experiences" style="height:48px">바로 입문 체험 3가지 보기</a></div></div>' + rulesBox();
-    }
-    if (EX.step < Q.length) return head + questionView(EX.step);
-    return head + resultView(computeExplore(EX.ans));
+    var id = route.parts[0] || "", isExperience = id === "experiences", selectedJob = JOB[id] && D.explore.cards[id];
+    return '<div class="page-head"><div class="eyebrow">멘토용 · 결과 유형 직접 선택</div><h1>진로 탐색</h1><p>학생이 보여 준 결과나 관심 있는 직무를 눌러 바로 설명하세요. 다른 직무를 누르면 설명과 실천 과제도 바로 바뀝니다.</p></div>' +
+      '<section class="card"><h2>학생 결과·관심 직무 선택</h2><nav class="explore-selector" aria-label="진로 탐색 결과 유형">' + JOBS.map(function (j) {
+        return '<a class="explore-choice c-' + j.color + (id === j.id ? ' active' : '') + '" href="#/explore/' + j.id + '"' + (id === j.id ? ' aria-current="page"' : '') + '>' + jobIcon(j) + '<b>' + esc(j.name) + '</b><span class="small">' + (id === j.id ? '현재 보는 결과' : '결과 바로 보기') + '</span></a>';
+      }).join('') + '<a class="explore-choice experience' + (isExperience ? ' active' : '') + '" href="#/explore/experiences"' + (isExperience ? ' aria-current="page"' : '') + '><span class="job-icon">' + icon('compass') + '</span><b>탐색 시작형</b><span class="small">아직 모르겠어요 · 체험 3가지</span></a></nav></section>' +
+      (isExperience ? directExperienceView() : selectedJob ? directResultView(id) : '<section class="card" style="margin-top:16px"><h2>어떤 결과를 설명할까요?</h2><p>위에서 결과 유형을 고르세요. 학생의 관심 분야가 바뀌면 다른 직무를 눌러 비교할 수 있어요.</p><p class="small muted">학생 휴대폰의 결과를 보고 선택하는 멘토용 설명 화면입니다.</p><div class="btn-row"><a class="btn" href="#/survey">설문 QR과 학생 결과 대응 보기 →</a></div></section>');
   };
-  function questionView(i) {
-    var q = D.explore.questions[i], sel = EX.ans[q.id];
-    return '<div class="card"><div class="steps">' + D.explore.questions.map(function (_, k) { return "<i" + (k <= i ? ' class="on"' : "") + "></i>"; }).join("") + "</div>" +
-      '<div class="eyebrow">질문 ' + (i + 1) + " / " + D.explore.questions.length + "</div>" +
-      '<div class="q-title">' + esc(q.title) + '</div><div class="muted">' + esc(q.help) + "</div>" +
-      '<div class="opt-list">' + q.options.map(function (o, k) {
-        return '<button class="opt' + (o.unknown ? " unknown" : "") + (sel === o.id ? " sel" : "") + '" data-opt="' + o.id + '"><span class="opt-n">' + (k + 1) + "</span>" + esc(o.label) + "</button>";
-      }).join("") + "</div>" +
-      '<div class="btn-row"><button class="btn" data-ex="prev">← 이전</button>' +
-      (sel ? '<button class="btn" data-ex="next">다음 →</button>' : "") +
-      '<button class="btn ghost" data-ex="reset">처음부터</button></div>' +
-      '<p class="small muted" style="margin-top:10px">숫자 키 1~' + q.options.length + "로도 선택할 수 있어요.</p></div>";
+  function directResultView(id) {
+    var J = JOB[id], C = D.explore.cards[id], N = JOB[D.explore.neighbor[id]];
+    var levels = [["none", "관련 경험 없음"], ["ai", "AI 도구 사용"], ["excel", "엑셀·데이터 경험"], ["code", "코딩 학습 경험"], ["project", "프로젝트 경험"]];
+    return '<section class="card result-main c-' + J.color + '" style="margin-top:16px"><div class="rm-label">선택한 결과 유형</div><h2 style="display:flex;align-items:center;gap:8px">' + jobIcon(J) + esc(J.name) + '</h2><p>' + esc(C.what) + '</p><h3>관련 역량</h3>' + C.skills.map(function (s) { return '<span class="chip">' + esc(s) + '</span>'; }).join('') +
+      '<div class="btn-row" style="margin-top:14px"><a class="btn primary" href="#/job/' + id + '">직무 상담 가이드 →</a><a class="btn" href="#/job/' + id + '/portfolio">포트폴리오 예시</a><a class="btn" href="#/job/' + id + '/hiring">실제 채용공고 분석</a></div></section>' +
+      '<div class="grid g2" style="margin-top:16px"><section class="card"><h2>학생에게 설명할 30초 멘트</h2>' + script('바로 설명하기', C.directSay) + '</section><section class="card"><h2>이어서 물어볼 질문</h2><ol>' + C.mentorQuestions.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ol></section></div>' +
+      '<section class="card" style="margin-top:16px"><h2>현재 경험에 맞춘 첫 학습</h2><p class="small muted">학생이 말한 경험이나 휴대폰 결과 카드에 맞춰 골라 주세요.</p><div class="btn-row" role="group" aria-label="참가자의 현재 경험">' + levels.map(function (x) { return '<button class="btn sm' + (EX.level === x[0] ? ' on' : '') + '" data-ex-level="' + x[0] + '" aria-pressed="' + (EX.level === x[0]) + '">' + esc(x[1]) + '</button>'; }).join('') + '</div><div class="callout" style="margin-top:14px"><strong>이 경험에서 시작할 것</strong>' + esc(C.first[EX.level]) + '</div>' +
+      '<h3 style="margin-top:18px">이번 주 실천 과제</h3><div class="btn-row" role="group" aria-label="주간 학습 시간">' + [["light", "주 1~2시간"], ["standard", "주 3~5시간"], ["heavy", "주 6시간 이상"]].map(function (x) { return '<button class="btn sm' + (EX.size === x[0] ? ' on' : '') + '" data-ex-size="' + x[0] + '" aria-pressed="' + (EX.size === x[0]) + '">' + esc(x[1]) + '</button>'; }).join('') + '</div><p class="explore-mission" style="margin-top:14px"><b>' + esc(C.week[EX.size]) + '</b></p></section>' +
+      '<section class="card" style="margin-top:16px"><h2>함께 비교해 볼 직무</h2><h3>' + esc(N.name) + '</h3><p>' + esc(D.explore.cards[N.id].what) + '</p><p class="small muted">' + esc(D.explore.neighborReason[id]) + '</p><div class="btn-row"><a class="btn" href="#/explore/' + N.id + '">' + esc(N.name) + ' 결과로 전환 →</a><a class="btn" href="#/explore/experiences">관심이 아직 없다면 → 탐색 시작형</a></div></section>';
   }
-  function jobLinkFor(id, focus) { var s = FOCUS_SEC[focus]; return "#/job/" + id + (s ? "/" + s : ""); }
-  function resultView(r) {
-    var E = D.explore, out = "";
-    var answers = D.explore.questions.map(function (q, i) {
-      var o = exOpt(i, EX.ans[q.id]);
-      return "<tr><td>" + esc(q.title) + "</td><td>" + (o ? esc(o.label) : '<span class="muted">미응답</span>') + '</td><td><button class="btn sm ghost" data-goto="' + i + '">수정</button></td></tr>';
-    }).join("");
-    if (r.mode === "experience") {
-      out += '<div class="callout"><strong>흥미 관련 질문(Q1·Q2)에 모두 \'모르겠어요\'를 골랐어요.</strong>그래서 직무를 억지로 추천하지 않고, 일주일 안에 해 볼 수 있는 입문 체험 3가지를 제안합니다.</div>';
-      out += '<div class="card" style="margin-top:16px">' + script("참가자에게 (30초)", E.mentorScript.allUnknown) + "</div>";
-      var startNote = r.level !== "none" && r.q3 && !r.q3.unknown ? "현재 경험(" + r.q3.label + ")을 보면 <b>체험 " + r.startExp + "</b>부터 시작하면 부담이 적어요." : "경험이 없다면 준비물이 가장 적은 <b>체험 A</b>부터 권해요.";
-      out += '<section class="section" id="experiences" style="margin-top:16px"><div class="card-head"><h2>입문 체험 3가지</h2><span class="small">' + startNote + "</span></div>" +
-        '<div class="grid g3">' + E.experiences.map(function (x) {
-          return '<div class="card exp-card"' + (x.id === r.startExp ? ' style="border-top-color:var(--ok)"' : "") + "><h3>" + esc(x.title) + (x.id === r.startExp ? ' <span class="tag tag-O">먼저 추천</span>' : "") + "</h3>" +
-            "<p>" + esc(x.desc) + '</p><dl class="kv"><dt>예시</dt><dd>' + esc(x.examples.join(" · ")) + "</dd><dt>소요 시간</dt><dd>" + esc(x.time) + "</dd><dt>난이도</dt><dd>" + esc(x.level) +
-            "</dd><dt>준비물</dt><dd>" + esc(x.prep) + "</dd><dt>결과물</dt><dd>" + esc(x.output) + "</dd><dt>확인 질문</dt><dd>" + esc(x.check) + "</dd></dl>" +
-            '<div class="btn-row" style="margin-top:10px">' + x.relates.map(function (id) { return '<a class="btn sm" href="#/job/' + id + '">관련: ' + esc(JOB[id].name) + "</a>"; }).join("") + "</div></div>";
-        }).join("") + "</div>" +
-        '<div class="callout" style="margin-top:16px"><strong>체험 후</strong>' + esc(E.afterExperience) + "</div></section>";
-    } else {
-      var J = JOB[r.primary], C = E.cards[r.primary], J2 = JOB[r.secondary], C2 = E.cards[r.secondary];
-      var myReasons = r.reasons.filter(function (x) { return x.job === r.primary; });
-      out += '<div class="callout"><strong>현재 답변을 바탕으로 먼저 탐색할 만한 분야예요.</strong>확정된 적성 판정이 아닙니다. 체험해 보고 아니면 다른 쪽으로 바꾸면 됩니다.</div>';
-      if (r.weak) out += '<div class="callout warn" style="margin-top:8px"><strong>근거가 약한 편</strong>' + esc(E.weakSignalNote) + "</div>";
-      out += '<div class="card" style="margin-top:16px">' + script("참가자에게 말할 짧은 설명 (30초)", C.say) + "</div>";
-      out += '<div class="grid g2" style="margin-top:16px">' +
-        '<section class="card result-main c-' + J.color + '"><div class="rm-label">먼저 체험해 볼 직무</div><h2 style="display:flex;gap:8px;align-items:center">' + jobIcon(J) + esc(J.name) + "</h2>" +
-          "<p>" + esc(C.what) + "</p>" +
-          '<h3>추천 이유 (답변 근거)</h3><ul class="reason-list">' + myReasons.map(function (x) { return "<li>" + esc(x.why) + ' <span class="muted small">(+' + x.pts + "점: " + esc(x.a) + ")</span></li>"; }).join("") + "</ul>" +
-          (r.tie ? '<p class="small muted">함께 탐색 직무와 점수가 같아요. 동점일 때는 Q2(업무 방식) 응답을 우선했어요. 두 직무를 모두 체험해 보길 권하세요.</p>' : "") +
-          "<h3>관련 역량</h3>" + C.skills.map(function (s) { return '<span class="chip">' + esc(s) + "</span>"; }).join("") +
-          '<h3 style="margin-top:14px">입문자 첫 학습 방법</h3><p>' + esc(C.first[r.level] || C.first.none) + "</p>" +
-          "<h3>일주일 실천 과제 <span class=\"small muted\">(" + esc(E.sizeLabel[r.size]) + ")</span></h3><p><b>" + esc(C.week[r.size]) + "</b></p>" +
-          '<div class="btn-row"><a class="btn primary" href="' + jobLinkFor(J.id, r.focus) + '">' + esc(J.name) + " 가이드 열기 →</a></div>" +
-        "</section>" +
-        '<section class="card result-main c-' + J2.color + '"><div class="rm-label">함께 탐색하면 좋은 직무</div><h2 style="display:flex;gap:8px;align-items:center">' + jobIcon(J2) + esc(J2.name) + "</h2>" +
-          "<p>" + esc(C2.what) + '</p><p class="small muted">' + esc(r.secondaryReason) + "</p>" +
-          "<h3>관련 역량</h3>" + C2.skills.map(function (s) { return '<span class="chip">' + esc(s) + "</span>"; }).join("") +
-          '<h3 style="margin-top:14px">가볍게 해 볼 것</h3><p>' + esc(C2.week.light) + "</p>" +
-          '<div class="btn-row"><a class="btn" href="#/job/' + J2.id + '">' + esc(J2.name) + " 가이드 →</a></div>" +
-        "</section></div>";
-      out += '<section class="card" style="margin-top:16px"><h2>멘토용 상세 설명</h2>' +
-        "<p>" + esc(E.focusText[r.focus]) + "</p>" + script("결과 안내 멘트", E.mentorScript.resultIntro) +
-        '<h3 style="margin-top:14px">직무별 점수</h3><div class="score-bars">' + ["planner", "analyst", "prompt", "llmdev"].map(function (id) {
-          var j = JOB[id], max = 5;
-          return '<div class="score-row c-' + j.color + '"><span>' + esc(j.name) + '</span><span class="bar"><i style="width:' + (r.scores[id] / max * 100) + '%"></i></span><b>' + r.scores[id] + "</b></div>";
-        }).join("") + '</div><p class="small muted" style="margin-top:8px">Q1·Q2 각 +2점, Q3 +1점 (최대 5점). Q4·Q5는 점수에 영향 없음.</p></section>';
-    }
-    out += '<section class="card" style="margin-top:16px"><h2>응답 요약</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>질문</th><th>응답</th><th></th></tr></thead><tbody>' + answers + "</tbody></table></div>" +
-      '<div class="btn-row" style="margin-top:12px"><button class="btn" data-ex="prev">← 이전 질문</button><button class="btn primary" data-ex="reset">다음 참가자 (초기화)</button></div></section>';
-    out += rulesBox();
-    return out;
-  }
-  function rulesBox() {
-    var Q = D.explore.questions;
-    return '<details class="acc" style="margin-top:16px"><summary>추천 기준 보기 (투명한 점수표)</summary><div class="acc-body">' +
-      '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>질문</th><th>선택지</th><th>점수</th></tr></thead><tbody>' +
-      [0, 1, 2].map(function (qi) {
-        return Q[qi].options.map(function (o, k) {
-          var pts = Object.keys(o.points || {}).map(function (j) { return JOB[j].name + " +" + o.points[j]; }).join(", ") || "—";
-          return "<tr>" + (k === 0 ? '<td rowspan="' + Q[qi].options.length + '">' + esc(Q[qi].title) + "</td>" : "") + "<td>" + esc(o.label) + "</td><td>" + esc(pts) + "</td></tr>";
-        }).join("");
-      }).join("") + "</tbody></table></div>" +
-      "<ul class=\"small\"><li>Q4(목표)는 결과 화면에서 어떤 정보를 먼저 연결할지만 정합니다.</li><li>Q5(학습 시간)는 실천 과제 크기만 정합니다.</li>" +
-      "<li>동점이면 Q2 응답 직무 → Q1 응답 직무 → 기획자·분석가·프롬프트·개발자 순.</li>" +
-      "<li>함께 탐색 직무는 2순위 점수가 0이면 인접 직무로 표시합니다.</li>" +
-      "<li>Q1·Q2가 모두 '모르겠어요'면 직무 대신 입문 체험 A·B·C를 제안합니다.</li>" +
-      "<li>AI·외부 서비스·숨은 가중치를 쓰지 않습니다. 기준은 data/explore.js에서 수정할 수 있습니다.</li></ul></div></details>";
+  function directExperienceView() {
+    var E = D.explore;
+    return '<section class="card" style="margin-top:16px"><div class="eyebrow">선택한 결과 유형</div><h2>🧭 탐색 시작형 · 아직 모르겠어요</h2><p>먼저 가볍게 해 볼 활동을 고르고, 체험 후 흥미를 느낀 부분을 함께 확인하세요.</p>' + script('학생에게 설명하기', E.mentorScript.allUnknown) + '</section>' +
+      '<section class="section" id="experiences" style="margin-top:16px"><h2>입문 체험 3가지</h2><div class="grid g3">' + E.experiences.map(function (x) {
+        return '<article class="card exp-card"><h3>' + esc(x.title) + '</h3><p>' + esc(x.desc) + '</p><dl class="kv"><dt>예시</dt><dd>' + esc(x.examples.join(' · ')) + '</dd><dt>소요 시간</dt><dd>' + esc(x.time) + '</dd><dt>난이도</dt><dd>' + esc(x.level) + '</dd><dt>준비물</dt><dd>' + esc(x.prep) + '</dd><dt>결과물</dt><dd>' + esc(x.output) + '</dd><dt>확인 질문</dt><dd>' + esc(x.check) + '</dd></dl><div class="btn-row">' + x.relates.map(function (job) { return '<a class="btn sm" href="#/explore/' + job + '">' + esc(JOB[job].name) + ' 결과 보기 →</a>'; }).join('') + '</div></article>';
+      }).join('') + '</div><div class="callout" style="margin-top:16px"><strong>체험 후 이어갈 대화</strong>' + esc(E.afterExperience) + '</div></section>';
   }
   P.explore.after = function () {
     var v = $("#view");
     v.onclick = function (ev) {
-      var b = ev.target.closest("[data-ex],[data-opt],[data-goto]"); if (!b) return commonClick(ev);
-      var Q = D.explore.questions;
-      if (b.hasAttribute("data-opt")) {
-        EX.ans[Q[EX.step].id] = b.getAttribute("data-opt"); EX.step++; rerender(); return;
-      }
-      if (b.hasAttribute("data-goto")) { EX.step = +b.getAttribute("data-goto"); rerender(); return; }
-      var a = b.getAttribute("data-ex");
-      if (a === "begin") { EX.started = true; EX.step = 0; EX.ans = {}; rerender(); }
-      if (a === "next") { EX.step++; rerender(); }
-      if (a === "prev") { if (EX.step === 0) { EX.started = false; EX.ans = {}; } else EX.step--; rerender(); }
-      if (a === "reset") { EX.step = 0; EX.ans = {}; EX.started = false; rerender(); }
-    };
-    function rerender() {
-      if (route.parts[0] === "experiences") { location.hash = "#/explore"; return; }
+      var b = ev.target.closest('[data-ex-level],[data-ex-size]'); if (!b) return commonClick(ev);
+      if (b.hasAttribute('data-ex-level')) EX.level = b.getAttribute('data-ex-level');
+      if (b.hasAttribute('data-ex-size')) EX.size = b.getAttribute('data-ex-size');
+      var selector = b.hasAttribute('data-ex-level') ? '[data-ex-level="' + EX.level + '"]' : '[data-ex-size="' + EX.size + '"]';
       onRoute(true);
-    }
+      var next = $(selector); if (next) next.focus({ preventScroll: true });
+    };
   };
 
   /* ───────── job ───────── */
@@ -866,10 +785,9 @@
     if (fn.after) fn.after();
     setActiveNav(r.page === "job" ? "job/" + r.parts[0] : r.page);
     closeMenu();
-    var sec = (r.page === "job" || r.page === "home") ? r.parts[r.page === "job" ? 1 : 0] : (r.page === "explore" && r.parts[0] === "experiences" ? "experiences" : null);
+    var sec = (r.page === "job" || r.page === "home") ? r.parts[r.page === "job" ? 1 : 0] : null;
     if (sec && document.getElementById(sec)) document.getElementById(sec).scrollIntoView({ block: "start" });
     else if (!keepScroll && !(r.page === "faq" && r.parts[0])) window.scrollTo(0, 0);
-    else if (keepScroll && r.page === "explore") window.scrollTo(0, 0);
     document.title = (titleFor(r) ? titleFor(r) + " · " : "") + "AI·데이터 멘토링 대시보드";
     lastPage = r.page + "/" + (r.page === "job" ? r.parts[0] : "");
     tick();
@@ -896,11 +814,6 @@
       var cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--fs"), 10) || 16;
       var next = sizes[(sizes.indexOf(cur) + 1) % sizes.length];
       document.documentElement.style.setProperty("--fs", next + "px"); store("md-fs", String(next)); toast("글자 크기 " + next + "px");
-    });
-    document.addEventListener("keydown", function (ev) {
-      if (route.page !== "explore" || /input|textarea/i.test(document.activeElement.tagName)) return;
-      var n = parseInt(ev.key, 10); if (!n) return;
-      var btns = $$(".opt"); if (btns[n - 1]) btns[n - 1].click();
     });
   }
 

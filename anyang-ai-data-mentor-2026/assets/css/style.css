@@ -261,6 +261,14 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: .92rem; }
 .flow li.done .fl-title { color: var(--text-3); text-decoration: line-through; }
 
 /* ── Explore ── */
+.explore-selector { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.explore-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 16px 10px; min-height: 140px; border: 2px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); text-align: center; }
+.explore-choice:hover, .explore-choice.active { border-color: var(--jc, var(--accent)); background: var(--jcs, var(--accent-soft)); text-decoration: none; }
+.explore-choice b { color: var(--jc, var(--accent)); }
+.explore-choice .job-icon { color: var(--jc, var(--accent)); background: var(--jcs, var(--accent-soft)); }
+.explore-mission { padding: 14px; background: var(--accent-soft); border-radius: 10px; }
+@media (max-width: 1100px) { .explore-selector { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .explore-selector { grid-template-columns: repeat(2, minmax(0, 1fr)); } .explore-choice { min-height: 120px; } .explore-choice:last-child { grid-column: 1 / -1; } }
 .cta-hero {
   display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   background: var(--accent); color: var(--on-accent); border-radius: var(--radius); padding: 20px 22px; border: 0;
