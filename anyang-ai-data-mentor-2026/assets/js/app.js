@@ -69,6 +69,7 @@
       { r: "home", t: "홈 / 상담 시작", i: "home" },
       { r: "explore", t: "진로를 모르겠어요", i: "compass", cta: true },
       { r: "survey", t: "대기자 QR 설문", i: "qr" },
+      { r: "graduate", t: "대졸자용 QR 설문", i: "qr" },
       { r: "trend", t: "AI 트렌드 4단계", i: "loop" }
     ]},
     { label: "직무별 상담 가이드", items: JOBS.map(function (j) { return { r: "job/" + j.id, t: j.name, dot: j.color }; }) },
@@ -737,10 +738,11 @@
   };
 
   /* ───────── 대기자 설문 (멘토 전용) ───────── */
-  function openQR() {
+  function openQR(kind) {
+    var S = kind === "graduate" ? D.survey.graduate : D.survey;
     var o = document.createElement("div"); o.className = "qr-overlay"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "설문 QR 코드");
-    o.innerHTML = '<div class="qr-box"><div class="qr-img">' + D.survey.qrSvg + '</div>' +
-      '<div class="qr-url">' + esc(D.survey.url.replace("https://", "")) + '</div><div class="qr-sub">결과 맨 아래 카드를 멘토에게 보여 주세요</div>' +
+    o.innerHTML = '<div class="qr-box">' + (kind === "graduate" ? '<div class="qr-title">대졸자용 AI·데이터 커리어 탐색</div>' : '') + '<div class="qr-img">' + S.qrSvg + '</div>' +
+      '<div class="qr-url">' + esc(S.url.replace("https://", "")) + '</div><div class="qr-sub">결과 맨 아래 카드를 멘토에게 보여 주세요</div>' +
       '<button class="btn" data-close="1">닫기 (Esc)</button></div>';
     function close() { o.remove(); document.removeEventListener("keydown", esck); }
     function esck(e) { if (e.key === "Escape") close(); }
@@ -748,6 +750,13 @@
     document.addEventListener("keydown", esck);
     document.body.appendChild(o); o.querySelector("[data-close]").focus();
   }
+  P.graduate = function () {
+    var S = D.survey.graduate;
+    return '<div class="page-head"><div class="eyebrow">대졸자 · 졸업예정자 · 커리어 전환 준비</div><h1>대졸자용 QR 설문</h1><p>전공·경험·보유 역량·목표를 확인하는 8개 질문으로, 4개 직무의 맞춤 실천 계획을 안내합니다.</p></div>' +
+      '<div class="grid g2"><section class="card"><h2>대졸자용 페이지 공유</h2><div class="qr-inline">' + S.qrSvg + '</div><p class="small" style="margin-top:10px;word-break:break-all"><a href="' + S.url + '" target="_blank" rel="noopener">' + S.url + '</a></p><div class="btn-row"><button class="btn primary" data-qr="graduate">QR 크게 보기</button><button class="btn" data-copy="' + S.url + '">링크 복사</button><a class="btn" href="' + S.url + '" target="_blank" rel="noopener">대졸자 화면 열기</a></div></section>' +
+      '<section class="card"><h2>상담 이어가기</h2><ol><li>추천 분야와 원래 희망 직무가 일치하는지 확인합니다.</li><li>전공·실습·프로젝트에서 본인이 직접 한 일을 묻습니다.</li><li>역량 점검에서 빠진 항목 하나를 우선 과제로 고릅니다.</li><li>4주 계획의 첫 과제와 포트폴리오 증거를 합의합니다.</li></ol><p class="small muted">전공은 직무 추천을 제한하지 않습니다. 결과는 자기보고 답변과 멘토의 탐색 규칙에 따른 안내이며, 채용 가능성 평가가 아닙니다.</p></section></div>' +
+      '<section class="card" style="margin-top:16px"><h2>4개 직무로 이어가기</h2><div class="btn-row">' + JOBS.map(function (j) { return '<a class="btn" href="#/job/' + j.id + '">' + esc(j.name) + '</a>'; }).join('') + '</div><p class="small muted" style="margin-top:12px">학생용 2분 설문은 기존 주소에 유지됩니다. <a href="#/survey">고등학생용 QR 설문 보기 →</a></p></section>';
+  };
   P.survey = function () {
     var S = D.survey, cur = route.parts[0] || "planner";
     var tname = function (id) { return id === "explore" ? "탐색 시작형 (모두 모르겠음)" : JOB[id].name; };
@@ -785,7 +794,7 @@
     return { page: parts[0] || "home", parts: parts.slice(1), path: parts.join("/") || "home" };
   }
   function commonClick(ev) {
-    var qb = ev.target.closest("[data-qr]"); if (qb) { openQR(); return; }
+    var qb = ev.target.closest("[data-qr]"); if (qb) { openQR(qb.getAttribute("data-qr")); return; }
     var tb = ev.target.closest("[data-trendbig]"); if (tb) { openTrendBig(); return; }
     var c = ev.target.closest("[data-copy]"); if (c) { copyText(c.getAttribute("data-copy")); return; }
     var t = ev.target.closest("[data-toggle]"); if (t) { var el = document.getElementById(t.getAttribute("data-toggle")); el.hidden = !el.hidden; t.classList.toggle("on", !el.hidden); return; }
@@ -817,7 +826,7 @@
     void samePage;
   }
   function titleFor(r) {
-    return { home: "", trend: "AI 트렌드 4단계", neural: "신경망 한눈에 보기", survey: "대기자 QR 설문", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
+    return { home: "", trend: "AI 트렌드 4단계", neural: "신경망 한눈에 보기", survey: "대기자 QR 설문", graduate: "대졸자용 QR 설문", explore: "진로 탐색", levels: "수준별 조언", faq: "FAQ", resources: "학습 자료", sources: "출처", search: "검색" }[r.page] ||
       (r.page === "job" && JOB[r.parts[0]] ? JOB[r.parts[0]].name : "");
   }
 
