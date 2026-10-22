@@ -278,7 +278,7 @@ function result(r){
     '<dt>경험</dt><dd>'+esc(r.q3?r.q3.l:"미응답")+'</dd><dt>졸업 후</dt><dd>'+esc(r.q4?r.q4.l:"미응답")+'</dd><dt>공부 시간</dt><dd>'+esc(r.q5?r.q5.l:"미응답")+'</dd>'+
     '<dt>궁금한 것</dt><dd>'+(asks.length?asks.map(esc).join(", "):"없음")+'</dd></dl></div>';
   h+='<div class="row"><button class="btn" data-a="prev">← 답 고치기</button><button class="btn" data-a="restart">처음부터 다시</button></div>'+
-    '<div class="card contact"><h2>📬 진로 고민, 언제든 연락해요</h2><p>진로와 관련해 고민이 생기면 언제든 이메일을 보내 주세요. 함께 이야기해 볼게요.</p><a href="mailto:morgan109jb@gmail.com">morgan109jb@gmail.com</a></div>'+
+    '<div class="card contact"><h2>📬 진로 고민, 언제든 연락해요</h2><p>진로와 관련해 고민이 생기면 언제든 이메일을 보내 주세요. 함께 이야기해 볼게요.</p><p>AI, 데이터 멘토 김동규</p><a href="mailto:morgan109jb@gmail.com">morgan109jb@gmail.com</a></div>'+
     '<div class="card save-card"><h2>🖼️ 결과 페이지 저장하기</h2><p class="small muted">지금 나온 결과 전체를 한 장의 이미지로 저장할 수 있어요.</p><button class="btn primary" type="button" data-a="save-image">공유 메뉴로 저장하기</button><button class="btn" type="button" data-a="download-image" style="margin-top:10px">PNG 파일로 다운로드</button><p class="save-status" id="saveImageStatus" aria-live="polite"></p></div>'+
     '<footer>결과 화면을 캡처해 두면 나중에 다시 볼 수 있어요.<br>답변은 서버로 전송되거나 저장되지 않아요.</footer>';
   return h;
