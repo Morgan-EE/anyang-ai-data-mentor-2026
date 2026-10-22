@@ -72,6 +72,20 @@ ul{margin:0 0 6px;padding-left:1.2em}li{margin:4px 0}
 .ox.right{border-color:var(--ok)}.ox.wrong{border-color:#d4453b}
 footer{margin-top:22px;font-size:.8rem;color:var(--text-3);text-align:center}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tl-board{background:#050607;color:#f1f5f4;border-radius:16px;padding:18px 16px 14px;margin-top:14px;border:1px solid #1d2422}
+.tl-kicker{font-size:.75rem;color:#8a9692;margin-bottom:8px}
+.tl-title{text-align:center;font-weight:800;font-size:1.2rem;line-height:1.35;margin:2px 0 14px}
+.tl-title em{font-style:normal;color:#4fe3c1}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:6px;position:relative}
+.tl::before{content:"";position:absolute;left:59px;top:14px;bottom:14px;border-left:2px dashed #2c6e5f}
+.tl li{display:flex;align-items:center;gap:10px;padding:6px 0;position:relative}
+.tl .y{width:38px;flex:none;text-align:right;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:.74rem;color:#4fe3c1}
+.tl .d{width:24px;height:24px;flex:none;border-radius:50%;border:2.5px solid #4fe3c1;background:#050607;position:relative;z-index:1}
+.tl .now .d{background:#4fe3c1;box-shadow:0 0 0 5px rgba(79,227,193,.18)}
+.tl b{display:block;font-size:1.05rem}.tl .now b{color:#4fe3c1}
+.tl .l{font-size:.86rem;color:#a7b3af}
+.tl-src{font-size:.7rem;color:#6b7672;margin-top:10px}
+.tl-more{font-size:.9rem;color:#d6dedb;margin-top:10px;border-top:1px solid #1d2422;padding-top:10px}
 </style>
 </head>
 <body>
@@ -129,12 +143,12 @@ var J={
   now:["자주 쓰는 앱의 불편한 점 3개를 적어 보기","학교생활 문제 하나를 골라 해결 화면을 종이에 그려 보기","친구 3명에게 그 문제가 진짜 불편한지 물어보기"],
   certs:[["컴퓨터활용능력","문서·엑셀 기본기를 보여줄 수 있어요"],["자격증보다 중요한 것","기획은 ‘내가 정리한 문제와 설계’ 결과물로 평가받는 경우가 많아요"]],
   week:{light:"앱 하나 골라 불편한 점 3개 + 개선 아이디어 1개 메모하기",standard:"친구·가족 3명에게 물어보고 개선 화면을 종이에 그리기",heavy:"인터뷰 5명 → 문제·해결 기능·AI가 틀릴 때 대응을 한 장으로 정리하기"}},
- prompt:{name:"프롬프트 엔지니어",c:"amber",ic:"🤖",one:"AI에게 일을 시키는 ‘지시문’을 설계하고, 정말 잘 되는지 시험해서 고치는 사람",
-  what:["AI가 원하는 답을 내도록 지시문·예시·형식을 설계해요","여러 질문으로 시험해서 몇 개가 잘 됐는지 비교해요","AI가 틀리거나 이상한 답을 낼 때 고치는 규칙을 만들어요"],
+ prompt:{name:"프롬프트 엔지니어",sub:"→ 요즘은 ‘루프 엔지니어링’으로 넓어지는 중",c:"amber",ic:"🤖",one:"AI에게 일을 시키는 방법을 설계하는 사람. 요즘은 지시문을 넘어, AI가 스스로 하고·검사하고·고치게 만드는 ‘루프 엔지니어링’으로 넓어지고 있어요",
+  what:["AI에게 줄 지시문과 자료를 설계해요","‘잘 됐다’를 판단할 검사 기준을 만들어요","AI가 ‘하기 → 검사 → 고치기’를 스스로 반복하고, 언제 멈출지 정해요 (루프 엔지니어링)"],
   day:[["오전","AI 답변 30개를 읽고 이상한 답 표시"],["점심 후","틀린 답을 유형별로 나누기"],["오후","지시문을 고쳐서 다시 시험"],["퇴근 전","고치기 전/후 결과를 표로 비교"]],
-  now:["같은 질문을 지시문만 바꿔 3번 해 보고 차이 적기","AI 답이 틀렸던 경험을 모아 보기 (왜 틀렸을까?)","‘시험 공부 계획 짜기’ 지시문을 점점 더 좋게 다듬어 보기"],
-  certs:[["국가 공인 자격 없음","이 분야는 아직 대표 국가자격이 확인되지 않아요. ‘개선 전/후 비교표’ 같은 결과물이 더 중요해요"],["함께 배우면 좋은 것","요즘은 기획·개발 일을 하면서 함께 하는 경우가 많아요"]],
-  week:{light:"뉴스 요약을 지시문 2가지로 시켜 보고 비교하기",standard:"같은 작업을 질문 10개 × 지시문 3가지로 시험하고 표 만들기",heavy:"질문 30개 + 채점 기준을 만들고 지시문을 3번 개선하기"}},
+  now:["같은 질문을 지시문만 바꿔 3번 해 보고 차이 적기","AI에게 일을 시키기 전에 ‘잘 됐다’의 검사 기준 3가지를 먼저 적어 보기","AI 결과를 그 기준으로 채점하고, 통과 못하면 다시 고치게 하기를 3번 반복해 보기 (손으로 돌리는 루프)"],
+  certs:[["국가 공인 자격 없음","이 분야는 아직 대표 국가자격이 확인되지 않아요. ‘개선 전/후 비교표’ 같은 결과물이 더 중요해요"],["함께 배우면 좋은 것: 파이썬 기초","루프를 자동으로 돌리려면 코딩이 필요해요. 요즘은 기획·개발 일과 함께 하는 경우가 많아요"]],
+  week:{light:"지시문 2가지로 같은 일을 시키고, 검사 기준 3개로 채점해 보기",standard:"검사 기준표를 만들고 ‘하기 → 검사 → 고치기’를 손으로 5번 돌려 보며 기록하기",heavy:"위 과정 + 파이썬 기초를 배워 자동으로 돌리는 흐름도 그려 보기"}},
  analyst:{name:"데이터 분석가",c:"teal",ic:"📊",one:"데이터에서 ‘왜 이런 일이 생겼는지’를 찾아서, 다른 사람이 결정할 수 있게 설명하는 사람",
   what:["회사 데이터를 꺼내서(SQL) 정리해요","표와 그래프로 변화를 확인해요","‘왜 줄었는지/늘었는지’ 근거를 찾아 설명해요"],
   day:[["오전","어제 이용자 수·매출 숫자 확인"],["점심 후","SQL로 필요한 데이터 꺼내기"],["오후","엑셀·파이썬으로 그래프 만들기"],["퇴근 전","팀에 ‘왜 이런 변화가 생겼는지’ 설명"]],
@@ -164,8 +178,16 @@ var OX=[
  {q:"ChatGPT 같은 AI의 답은 항상 정확하다.",a:"X",e:"AI는 그럴듯하지만 틀린 답을 낼 때가 있어요. 그래서 확인하고 고치는 사람이 필요해요."},
  {q:"SQL은 데이터베이스에서 데이터를 꺼낼 때 쓰는 언어다.",a:"O",e:"맞아요! 데이터 분석가와 개발자가 매일 쓰는 언어예요."},
  {q:"AI 도구에 내 주민번호나 친구 연락처를 넣어도 괜찮다.",a:"X",e:"개인정보는 AI 도구에 넣지 않는 게 기본 원칙이에요."},
- {q:"‘프롬프트’는 AI에게 주는 지시문을 말한다.",a:"O",e:"맞아요! 지시문을 잘 쓰면 같은 AI도 훨씬 좋은 답을 내요."}
+ {q:"‘프롬프트’는 AI에게 주는 지시문을 말한다.",a:"O",e:"맞아요! 지시문을 잘 쓰면 같은 AI도 훨씬 좋은 답을 내요."},
+ {q:"요즘은 AI에게 질문만 잘하면 충분하다.",a:"X",e:"AI를 다루는 기술은 질문(프롬프트) → 자료 챙겨 주기(컨텍스트) → 일할 자리 세팅(하네스) → 스스로 반복하게 만들기(루프)로 넓어지고 있어요."}
 ];
+var TREND=[["2023","프롬프트","질문 하나를 잘 던진다"],["","컨텍스트","배경 지식을 챙겨준다"],["","하네스","일할 자리를 세팅한다"],["2026","루프","안 시켜도 돌아가게 한다"]];
+function trendCard(extra){
+  return '<div class="tl-board"><div class="tl-kicker">요즘 AI 트렌드</div><div class="tl-title">AI를 다루는 기술은 <em>4단계</em>로 진화</div><ol class="tl">'+
+  TREND.map(function(t,i){return '<li'+(i===3?' class="now"':'')+'><span class="y">'+t[0]+'</span><span class="d"></span><span><b>'+t[1]+'</b><span class="l">'+t[2]+'</span></span></li>';}).join("")+
+  '</ol><div class="tl-more">'+(extra||'처음엔 AI에게 <b>질문을 잘 하는 것</b>이 중요했다면, 지금은 AI가 <b>스스로 하고·검사하고·고치게</b> 만드는 ‘루프’까지 왔어요. 그래서 요즘은 AI가 일하는 과정을 설계하는 사람이 더 필요해지고 있어요.')+'</div>'+
+  '<div class="tl-src">참고: 이동훈의 루트AI 「Loop Engineering Explained in 10 Minutes」</div></div>';
+}
 var TOPIC={day:"일하는 사람의 하루",hsjob:"고졸 취업",cert:"자격증",pf:"포트폴리오",nocode:"코딩 못해도?",math:"수학",ai:"AI와 일자리",college:"대학 진학"};
 
 /* ───── 상태 (이 화면에만 보관, 서버로 보내지 않음) ───── */
@@ -226,7 +248,7 @@ function result(r){
   } else {
     var P=J[r.p],S2=J[r.s],why=r.why.filter(function(w){return w.j===r.p;});
     h+='<div class="card result-top c-'+P.c+'"><div class="eyebrow">지금 답변으로 보면, 먼저 알아볼 만한 분야</div>'+
-      '<h1 class="jt"><span class="ic">'+P.ic+'</span>'+esc(P.name)+'</h1><p><b>'+esc(P.one)+'</b></p>'+
+      '<h1 class="jt"><span class="ic">'+P.ic+'</span>'+esc(P.name)+'</h1>'+(P.sub?'<p class="small" style="margin:-4px 0 8px;font-weight:800;color:var(--jc)">'+esc(P.sub)+'</p>':'')+'<p><b>'+esc(P.one)+'</b></p>'+
       '<h3>왜 이 결과가 나왔을까?</h3><ul>'+why.map(function(w){return '<li>'+esc(w.r)+'</li>';}).join("")+'</ul>'+
       (r.weak?'<div class="note warn">답변 중 한 가지만 이 분야를 가리켰어요. ‘정답’이 아니라 ‘한번 체험해 볼 후보’로 봐 주세요.</div>':'<div class="note">적성검사 결과가 아니에요. 해 보고 아니면 다른 쪽으로 바꾸면 돼요.</div>')+'</div>';
     h+='<div class="card c-'+P.c+'"><h2>이 일은 이런 일을 해요</h2><ul>'+P.what.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
@@ -239,6 +261,7 @@ function result(r){
     h+='<div class="card c-'+S2.c+'"><h2>함께 알아보면 좋은 분야</h2><p class="jt" style="font-weight:800;font-size:1.05rem;margin:0 0 4px"><span class="ic">'+S2.ic+'</span>'+esc(S2.name)+'</p><p>'+esc(S2.one)+'</p><p class="small muted">가볍게 해 볼 것: '+esc(S2.week.light)+'</p></div>';
     showRows='<dt>먼저 알아볼 분야</dt><dd>'+esc(P.name)+(r.weak?' (후보)':'')+'</dd><dt>함께 볼 분야</dt><dd>'+esc(S2.name)+'</dd>';
   }
+  h+=trendCard(r.mode==="job"&&r.p==="prompt"?'프롬프트 엔지니어를 단독으로 뽑는 곳은 많지 않아요. 대신 지시문 설계에 <b>검사 기준 만들기</b>와 <b>파이썬 기초</b>를 더하면, AI가 스스로 하고·검사하고·고치게 만드는 <b>루프 엔지니어링</b>으로 이어질 수 있어요.':null);
   h+='<div class="card"><h2>⏳ 기다리는 동안 OX 퀴즈</h2>'+OX.map(function(x,i){return '<div class="ox" data-ox="'+i+'"><div class="q">Q'+(i+1)+'. '+esc(x.q)+'</div><div class="b"><button data-x="O">⭕ O</button><button data-x="X">❌ X</button></div><div class="a"></div></div>';}).join("")+'</div>';
   h+='<div class="card show"><div class="eyebrow">상담할 때 이 카드를 멘토에게 보여 주세요</div><h2>👀 멘토에게 보여주기</h2><dl>'+showRows+
     '<dt>경험</dt><dd>'+esc(r.q3?r.q3.l:"미응답")+'</dd><dt>졸업 후</dt><dd>'+esc(r.q4?r.q4.l:"미응답")+'</dd><dt>공부 시간</dt><dd>'+esc(r.q5?r.q5.l:"미응답")+'</dd>'+
